@@ -31,7 +31,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			get
 			{
-				return "http://" + SystemInformation.ComputerName + ":" + PreferredPort.ToString() + "/";
+				return "http://" + SystemInformation.ComputerName + PreferredPort.ToString() + "/";
 			}
 		}
 		public void HandleRequest(NetworkStream stream)
@@ -41,6 +41,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 			StreamReader reader = new StreamReader(stream);
 			StreamWriter writer = new StreamWriter(stream);
 
+			ParseHeaders(reader);
 			WriteHeaders(writer);
 			writer.WriteLine("<html><head>");
 			writer.WriteLine("<style>td { font-family: Arial; font-size: 12px; margin: 0; padding: 0; }</style>");
@@ -50,7 +51,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 			writer.WriteLine("<thead><tr><th>Service Name</th><th>Status</th><th>Actions</th></tr></thead>");
 			writer.WriteLine("<tbody>");
 
-			Match task = Regex.Match(GetUrlRequested(reader), @"(?<verb>\w+)=(?<service>.+)");
+			Match task = Regex.Match(url, @"(?<verb>\w+)=(?<service>.+)");
 			switch( task.Groups["verb"].Value )
 			{
 				case "log":
@@ -114,22 +115,25 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 				writer.WriteLine("<td>{0}</td>", service.DisplayName);
 				writer.WriteLine("<td title=\"{1}\">{0}</td>", service.Status, service.ServiceName);
 				writer.Write("<td>");
-				switch( service.Status )
+				if( cookie != null ) 
 				{
-					case ServiceControllerStatus.Stopped:
-						writer.Write("<a href=\"{0}\">Start</a>", UrlBase + "start=" + HttpUtility.UrlEncode(service.ServiceName));
-						break;
-					case ServiceControllerStatus.Running:
-						if( service.CanPauseAndContinue )
-							writer.Write("<a href=\"{0}\">Pause</a> ", UrlBase + "pause=" + HttpUtility.UrlEncode(service.ServiceName));
-						if( service.CanStop )
-							writer.Write("<a href=\"{0}\">Stop</a>", UrlBase + "stop=" + HttpUtility.UrlEncode(service.ServiceName));
-						break;
-					case ServiceControllerStatus.Paused:
-						writer.Write("<a href=\"{0}\">Resume</a> ", UrlBase + "resume=" + HttpUtility.UrlEncode(service.ServiceName));
-						if( service.CanStop )
-							writer.Write("<a href=\"{0}\">Stop</a>", UrlBase + "stop=" + HttpUtility.UrlEncode(service.ServiceName));
-						break;
+					switch( service.Status )
+					{
+						case ServiceControllerStatus.Stopped:
+							writer.Write("<a href=\"{0}\">Start</a>", UrlBase + "start=" + HttpUtility.UrlEncode(service.ServiceName));
+							break;
+						case ServiceControllerStatus.Running:
+							if( service.CanPauseAndContinue )
+								writer.Write("<a href=\"{0}\">Pause</a> ", UrlBase + "pause=" + HttpUtility.UrlEncode(service.ServiceName));
+							if( service.CanStop )
+								writer.Write("<a href=\"{0}\">Stop</a>", UrlBase + "stop=" + HttpUtility.UrlEncode(service.ServiceName));
+							break;
+						case ServiceControllerStatus.Paused:
+							writer.Write("<a href=\"{0}\">Resume</a> ", UrlBase + "resume=" + HttpUtility.UrlEncode(service.ServiceName));
+							if( service.CanStop )
+								writer.Write("<a href=\"{0}\">Stop</a>", UrlBase + "stop=" + HttpUtility.UrlEncode(service.ServiceName));
+							break;
+					}
 				}
 				writer.Write("</td>");
 				switch( service.ServiceName )
@@ -164,6 +168,12 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 			writer.WriteLine("HTTP/1.1 200 OK");
 			writer.WriteLine("Content-Type: text/html");
 			writer.WriteLine("Connection: close"); 
+			if( !cookieAssigned )
+			{
+				cookieAssigned = true;
+				writer.WriteLine("Set-Cookie: first=true;");
+				cookie = "first=true";
+			}
 			writer.WriteLine();
 		}
 		protected string ReadHeaders(TextReader reader)
@@ -178,13 +188,20 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			return ReadHeaders(reader).Split(Environment.NewLine.ToCharArray());
 		}
-		protected string GetTopHeader(TextReader reader)
+		private bool cookieAssigned = false;
+		private string cookie;
+		private string url;
+		protected void ParseHeaders(TextReader reader)
 		{
-			return SplitHeaders(reader)[0];
-		}
-		protected string GetUrlRequested(TextReader reader)
-		{
-			return HttpUtility.UrlDecode(GetTopHeader(reader).Split(' ')[1]);
+			string[] headers = SplitHeaders(reader);
+			url = HttpUtility.UrlDecode(headers[0].Split(' ')[1]);
+			cookie = null;
+			// search for cookie
+			foreach( string header in headers )
+			{
+				if( header.StartsWith("Cookie") )
+					cookie = header;
+			}
 		}
 
 		#endregion
