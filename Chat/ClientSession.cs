@@ -122,7 +122,7 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		}
 		private bool GetName()
 		{
-			writer.Write("Enter your name: ");
+			writer.WriteLine("Enter your name:");
 			writer.Flush();
 			try 
 			{
@@ -142,11 +142,16 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 				while( !lastMessageReceived.ToLower().StartsWith("bye") )
 				{
 					writer.Write(DequeueAllMessages());
-					writer.Write("{0}>", Name);
+					//writer.Write("{0}>", Name);
 					writer.Flush();
-					lastMessageReceived = reader.ReadLine();
-					if( lastMessageReceived == null ) return;
-					OnIncomingMessage();
+					NetworkStream ns = (NetworkStream) reader.BaseStream;
+					if(ns.DataAvailable)
+					{
+						lastMessageReceived = reader.ReadLine();
+						if( lastMessageReceived == null ) return;
+						OnIncomingMessage();
+					}
+					
 				}
 			}
 			catch( IOException )
@@ -157,7 +162,7 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		private string DequeueAllMessages()
 		{
 			// Wait until we have at least one message (for our synchronous clients)
-			while( messagesToGoOut.Count == 0 ) Thread.Sleep(100);
+			//while( messagesToGoOut.Count == 0 ) Thread.Sleep(100);
 
 			// Dequeue all waiting messages for the client as one long string.
 			StringBuilder s = new StringBuilder(50*messagesToGoOut.Count);

@@ -13,7 +13,6 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 	
 	public class Server : MarshalByRefObject, IHandler
 	{
-		//public const int DefaultPort = 9020;
 		public const int DefaultMaxConnections = 20;
 		public const int HistorySize = 100;
 		public const string EndOfLine = "\r\n";
