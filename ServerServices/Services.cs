@@ -64,7 +64,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 
 		protected internal PluginManager PluginManager;
-		protected PortManager PortManager;
+		protected internal PortManager PortManager;
 		#endregion
 
 		#region Operations

@@ -13,13 +13,15 @@ namespace Byu.IT347.PluginServer.ServerServices
 	{
 		private const bool FileNamesAreCaseSensitive = false;
 		#region Construction
-		public PluginAppDomainCollection()
+		public PluginAppDomainCollection(Services services)
 		{
+			this.services = services;
 			appdomains = new HybridDictionary(4, !FileNamesAreCaseSensitive);
 		}
 		#endregion
 
 		#region Attributes
+		protected Services services;
 		public int Count
 		{
 			get
@@ -108,8 +110,12 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 		public void Reload(string assemblyPath)
 		{
+			Status oldPortManagerStatus = services.PortManager.Status;
+			if( services.PortManager.Status == Status.Running )
+				services.PortManager.Status = Status.Paused;
 			Unload(assemblyPath);
 			Load(assemblyPath);
+			services.PortManager.Status = oldPortManagerStatus;
 		}
 		public void UnloadAll()
 		{

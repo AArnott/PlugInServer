@@ -20,7 +20,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 		private void InitializePluginAppDomainsCollection()
 		{
-			pluginAppDomains = new PluginAppDomainCollection();
+			pluginAppDomains = new PluginAppDomainCollection((Services)Server);
 			pluginAppDomains.AppDomainLoaded += new PluginAppDomainCollection.AppDomainEventHandler(pluginAppDomains_AppDomainLoaded);
 			pluginAppDomains.AppDomainUnloading += new PluginAppDomainCollection.AppDomainEventHandler(pluginAppDomains_AppDomainUnloading);
 		}
