@@ -20,14 +20,24 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 		public void HandleRequest( NetworkStream stream, IPEndPoint local, IPEndPoint remote )
 		{
 			StreamReader sr = new StreamReader(stream);
+			StreamWriter sw = new StreamWriter(stream);
 			string urlrequest = sr.ReadLine();
-			Console.WriteLine("\n" + urlrequest + "\n");
+			//Console.WriteLine("\n" + urlrequest + "\n");
 			int start = urlrequest.IndexOf("/")+1;
 			int end = urlrequest.IndexOf(" ",start);
 			string url = urlrequest.Substring(start,end-start);
-			Console.WriteLine("\n" + url + "\n");
-			
-			Process proc = Process.Start("C:\\php\\php-cgi.exe", "C:\\php\\" + url);
+			//Console.WriteLine("\n" + url + "\n");
+			ProcessStartInfo psi = new ProcessStartInfo("C:\\php\\php-cgi.exe", "C:\\php\\" + url);
+			psi.UseShellExecute =false;
+			psi.RedirectStandardOutput = true;
+				
+			Process proc = Process.Start(psi);
+			sw.Write("HTTP/1.0 200 OK\r\n");
+			while( !proc.HasExited )
+			{
+				sw.Write(proc.StandardOutput.ReadToEnd());
+			}
+			sw.Flush();
 			
 			//StreamWriter sw = new StreamWriter(stream);
 			//sw.WriteLine("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\nHello, {1}! {0}", 
@@ -52,7 +62,7 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 		{ 
 			get
 			{
-				return new int[] {8090};
+				return new int[] {80};
 			}
 		}
 
