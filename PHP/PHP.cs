@@ -6,17 +6,14 @@ using System.Net.Sockets;
 
 namespace Byu.IT347.PluginServer.Plugins.PHP
 {
-	/// <summary>
-	/// Plugin for dynamic server to handle PHP requests
-	/// </summary>
+	
+	/// Plugin for dynamic server to handle PHP requests	
 	public class PHPplugin : IHandler
 	{
-		public PHPplugin()
-		{
-		}
-		
+				
 		public void HandleRequest( NetworkStream stream, IPEndPoint local, IPEndPoint remote )
 		{
+
 		}
 
 		public string Name 
@@ -26,6 +23,8 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 				return "PHP";
 			}
 		}
+		
+		
 		public int[] Ports 
 		{ 
 			get
@@ -34,18 +33,27 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 			}
 		}
 
+		
 		public void Startup(IServer server)
 		{
+			
 		}
 
 		public void Shutdown()
 		{
+
 		}
 
 		public bool CanProcessRequest(string url)
 		{
-			return true;
+			if(url.IndexOf(".php") <= 0)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
 		}
-
 	}
 }
