@@ -24,6 +24,29 @@ namespace Byu.IT347.PluginServer.ServerServices
 
 		#region Attributes
 		protected readonly Services Services;
+		private Status status = Status.Stopped;
+		public Status Status
+		{
+			get
+			{
+				return status;
+			}
+			set
+			{
+				switch( value )
+				{
+					case Status.Running:
+						RefreshSockets();
+						break;
+					case Status.Stopped:
+						CloseAllSockets();
+						break;
+					case Status.Paused:
+						break;
+				}
+				status = value;
+			}
+		}
 		protected int[] PortsList
 		{
 			get
@@ -77,6 +100,23 @@ namespace Byu.IT347.PluginServer.ServerServices
 				}
 			}
 		}
+		protected void CloseAllSockets()
+		{
+			foreach( Socket socket in OpenSockets.AllSockets )
+			{
+				OpenSockets.Remove(socket);
+				socket.Close();
+			}
+		}
+		protected void RefreshSockets()
+		{
+			CloseOldSockets();
+			OpenNewSockets();
+			if( OpenSockets.Count > 0 )
+				Console.WriteLine("Sockets now open: {0}", string.Join(", ", OpenSockets.AllPortsAsStrings));
+			else
+				Console.WriteLine("Sockets all closed.");
+		}
 
 		protected Socket OpenListeningSocket(int port)
 		{
@@ -92,12 +132,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#region Event handlers
 		private void PluginManager_Changed(object sender, EventArgs e)
 		{
-			CloseOldSockets();
-			OpenNewSockets();
-			if( OpenSockets.Count > 0 )
-				Console.WriteLine("Sockets now open: {0}", string.Join(", ", OpenSockets.AllPortsAsStrings));
-			else
-				Console.WriteLine("Sockets all closed.");
+			if( Status == Status.Running ) RefreshSockets();
 		}
 		#endregion
 	}

@@ -72,12 +72,14 @@ namespace Byu.IT347.PluginServer.ServerServices
 			if( status == Status.Running ) throw new InvalidOperationException("Already running.");
 			status = Status.Running;
 			PluginManager.Status = status;
+			PortManager.Status = status; // start port manager after plugins so we only open ports once
 		}
 
 		public void Stop()
 		{
 			if( status == Status.Stopped ) throw new InvalidOperationException("Already stopped.");
 			status = Status.Stopped;
+			PortManager.Status = status; // stop ports before plugins so we only close ports once
 			PluginManager.Status = status;
 		}
 
@@ -86,9 +88,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 			if( status == Status.Paused ) throw new InvalidOperationException("Already paused.");
 			status = Status.Paused;
 			PluginManager.Status = status;
-
-			// Stop accepting requests on ports, but leave them open
-			// TODO: code here
+			PortManager.Status = status;
 		}
 		#endregion
 
