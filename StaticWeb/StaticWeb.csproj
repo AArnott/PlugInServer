@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = ""
+                PostBuildEvent = 'cmd.exe /c copy "$(TargetPath)" "$(SolutionDir)ServerConsole\$(OutDir)Plugins"'
                 RootNamespace = "Byu.IT347.PluginServer.Plugins.StaticWeb"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -76,7 +76,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
