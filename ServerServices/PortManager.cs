@@ -27,15 +27,14 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			get
 			{
-				ArrayList ports = new ArrayList(Services.pluginAppDomains.Count);
-				foreach( PluginAppDomain appDomain in Services.pluginAppDomains )
+				ArrayList ports = new ArrayList(Services.Count);
+				foreach( IPlugin plugin in Services )
 				{
-					foreach( IHandler handler in appDomain.Handlers )
-					{
-						foreach( int port in handler.Ports )
-							if( !ports.Contains(port) )
-								ports.Add(port);
-					}
+					if( !(plugin is IHandler) ) continue;
+					IHandler handler = (IHandler) plugin;
+					foreach( int port in handler.Ports )
+						if( !ports.Contains(port) )
+							ports.Add(port);
 				}
 				return (int[]) ports.ToArray(typeof(int));
 			}

@@ -59,7 +59,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 		private void LoadAssemblyPlugins()
 		{
-			Console.WriteLine("Loading plugins in: {0}", AssemblyName.Name);
+			Console.WriteLine("Loading {0} assembly.", AssemblyName.Name);
 			// Start a remote plugin launcher within the new appdomain.
 			PluginFinder finder = (PluginFinder) AppDomain.CreateInstanceFromAndUnwrap(
 				typeof(PluginFinder).Assembly.CodeBase, typeof(PluginFinder).FullName);
@@ -71,7 +71,6 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			foreach( IPlugin plugin in Plugins )
 			{
-				Console.WriteLine("Loading plugin: {0}", plugin.Name);
 				if( plugin is IHandler )
 					Handlers.Add( plugin );
 				if( plugin is IFilter )
@@ -95,7 +94,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#region Operations
 		public void Unload()
 		{
-			Console.WriteLine("Unloading: {0}", AssemblyName.Name);
+			Console.WriteLine("Unloading {0} assembly.", AssemblyName.Name);
 			Filters.Clear();
 			Handlers.Clear();
 			

@@ -44,14 +44,34 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 		#endregion
 
+		#region Events
+		public delegate void AppDomainEventHandler(PluginAppDomain appDomain);
+		public event AppDomainEventHandler AppDomainLoaded;
+		protected void OnAppDomainLoaded(PluginAppDomain appDomain)
+		{
+			AppDomainEventHandler appDomainLoaded = AppDomainLoaded;
+			if( appDomainLoaded == null ) return; // no listeners
+			appDomainLoaded(appDomain);
+		}
+		public event AppDomainEventHandler AppDomainUnloading;
+		protected void OnAppDomainUnloading(PluginAppDomain appDomain)
+		{
+			AppDomainEventHandler appDomainUnloading = AppDomainUnloading;
+			if( appDomainUnloading == null ) return; // no listeners
+			appDomainUnloading(appDomain);
+		}
+		#endregion
+
 		#region Operations
 		public PluginAppDomain Load(string assemblyFilename)
 		{
 			try 
 			{
+				if( appdomains.Contains(assemblyFilename) ) throw new InvalidOperationException("Assembly already loaded.");
 				PluginAppDomain appdomain = new PluginAppDomain(AssemblyName.GetAssemblyName(assemblyFilename));
 				// Keep track of the appdomain so we can unload it if the plugin changes or is removed.
 				appdomains.Add( assemblyFilename, appdomain );
+				OnAppDomainLoaded(appdomain);
 				return appdomain;
 			}
 			catch( Exception ex )
@@ -64,6 +84,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			if( !Contains( assemblyPath ) ) return;
 			PluginAppDomain appdomainToUnload = this[assemblyPath];
+			OnAppDomainUnloading(appdomainToUnload);
 			appdomains.Remove( assemblyPath );
 
 			appdomainToUnload.Unload();
@@ -71,9 +92,15 @@ namespace Byu.IT347.PluginServer.ServerServices
 		public void Unload(AppDomain appdomain)
 		{
 			if( !Contains( appdomain ) ) return;
+			PluginAppDomain appdomainToUnload = this[appdomain.FriendlyName];
+			OnAppDomainUnloading(appdomainToUnload);
 			appdomains.Remove( appdomain.FriendlyName );
-			
-			AppDomain.Unload( appdomain );
+			appdomainToUnload.Unload();
+		}
+		public void Reload(string assemblyPath)
+		{
+			Unload(assemblyPath);
+			Load(assemblyPath);
 		}
 		public void UnloadAll()
 		{

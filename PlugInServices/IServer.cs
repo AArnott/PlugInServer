@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 namespace Byu.IT347.PluginServer.PluginServices
 {
@@ -9,10 +10,9 @@ namespace Byu.IT347.PluginServer.PluginServices
 		Paused
 	}
 
-	public interface IServer
+	public interface IServer : IEnumerable
 	{
 		Status Status { get; }
-		IPlugin[] Plugins { get; }
 
 		void SurrenderPlugin(IPlugin Plugin);
 	}

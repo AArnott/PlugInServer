@@ -64,6 +64,10 @@ namespace Byu.IT347.PluginServer.ServerServices
 				return e;
 			}
 		}
+		public void Clear()
+		{
+			queue.Clear();
+		}
 		protected bool ContainsSimilar(FileSystemEventArgs e)
 		{
 			return IndexOfSimilar(e) >= 0;
