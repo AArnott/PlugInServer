@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = 'cmd.exe /c copy "$(TargetPath)" "$(SolutionDir)ServerConsole\$(OutDir)Plugins"'
+                PostBuildEvent = 'cmd.exe /c copy "$(TargetPath)" "$(SolutionDir)ServerConsole\$(OutDir)..\Plugins"&#xd;&#xa;cmd.exe /c copy "$(TargetPath)" "$(SolutionDir)ServerGui\$(OutDir)..\Plugins"'
                 RootNamespace = "Byu.IT347.PluginServer.Plugins.WindowsServicesManagement"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
