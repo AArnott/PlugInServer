@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "StaticHtml"
+                AssemblyName = "StaticWeb"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -18,7 +18,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Byu.IT347.PluginServer.Plugins.StaticHtml"
+                RootNamespace = "Byu.IT347.PluginServer.Plugins.StaticWeb"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -94,7 +94,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "StaticHtml.cs"
+                    RelPath = "StaticWeb.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

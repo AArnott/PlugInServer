@@ -3,7 +3,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginServices", "PlugInSer
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticHtml", "StaticHtml\StaticHtml.csproj", "{DB1341CE-ED68-4D48-9978-8C148BDABB1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticWeb", "StaticWeb\StaticWeb.csproj", "{DB1341CE-ED68-4D48-9978-8C148BDABB1B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

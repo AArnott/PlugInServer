@@ -4,11 +4,11 @@ using Byu.IT347.PluginServer.PluginServices;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Byu.IT347.PluginServer.Plugins.StaticHtml
+namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 {
-	public class StaticHtmlPlugIn : MarshalByRefObject, IHandler
+	public class StaticWebPlugIn : MarshalByRefObject, IHandler
 	{
-		public StaticHtmlPlugIn()
+		public StaticWebPlugIn()
 		{
 		}
 		#region IHandler Members
@@ -32,7 +32,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticHtml
 
 		public bool CanProcessRequest(string url)
 		{
-			// TODO:  Add StaticHtmlPlugIn.CanProcessRequest implementation
+			// TODO:  Add StaticWebPlugIn.CanProcessRequest implementation
 			return false;
 		}
 
@@ -46,20 +46,20 @@ namespace Byu.IT347.PluginServer.Plugins.StaticHtml
 
 		public void Shutdown()
 		{
-			// TODO:  Add StaticHtmlPlugIn.Shutdown implementation
+			// TODO:  Add StaticWebPlugIn.Shutdown implementation
 		}
 
 		public string Name
 		{
 			get
 			{
-				return "Static HTML server";
+				return "Static Web server";
 			}
 		}
 
 		public void Startup(IServer server)
 		{
-			// TODO:  Add StaticHtmlPlugIn.Startup implementation
+			// TODO:  Add StaticWebPlugIn.Startup implementation
 		}
 
 		#endregion
