@@ -10,14 +10,16 @@ namespace Byu.IT347.PluginServer.ServerServices
 	[Serializable]
 	public class PluginAppDomainCollection
 	{
+		private const bool FileNamesAreCaseSensitive = false;
 		#region Construction
 		public PluginAppDomainCollection()
 		{
+			appdomains = new HybridDictionary(4, !FileNamesAreCaseSensitive);
 		}
 		#endregion
 
 		#region Attributes
-		private HybridDictionary appdomains = new HybridDictionary(4, false);
+		private HybridDictionary appdomains;
 		public bool Contains(string assemblyPath)
 		{
 			return appdomains.Contains(assemblyPath);

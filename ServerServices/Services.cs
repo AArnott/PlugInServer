@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Collections;
 using System.Globalization;
 using Byu.IT347.PluginServer.PluginServices;
+using System.Timers;
 
 namespace Byu.IT347.PluginServer.ServerServices
 {
@@ -21,17 +22,54 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 		private void InitializePluginWatcher()
 		{
+			// Initialize timer for delaying response to I/O events
+			PluginWatcherTimer = new Timer(PluginWatcherMinimumWaitTimeDefault);
+			PluginWatcherTimer.AutoReset = false;
+			PluginWatcherTimer.Elapsed += new ElapsedEventHandler(PluginWatcherTimer_Elapsed);
+
+			// Initialize queue for storing delayed I/O events for later handling
+			PendingPluginWatcherEvents = new IONotificationQueue(8);
+			
+			// Initialize the file system watcher itself
 			PluginWatcher = new FileSystemWatcher(System.IO.Directory.GetCurrentDirectory(), "*.dll");
 			PluginWatcher.IncludeSubdirectories = false;
-			PluginWatcher.Created += new FileSystemEventHandler(PluginWatcher_New);
-			PluginWatcher.Deleted += new FileSystemEventHandler(PluginWatcher_Deleted);
-			PluginWatcher.Changed += new FileSystemEventHandler(PluginWatcher_Changed);
+			PluginWatcher.Created += new FileSystemEventHandler(PluginWatcher_IOEvent);
+			PluginWatcher.Deleted += new FileSystemEventHandler(PluginWatcher_IOEvent);
+			PluginWatcher.Changed += new FileSystemEventHandler(PluginWatcher_IOEvent);
 			PluginWatcher.EnableRaisingEvents = true;
 		}
 		#endregion
 
 		#region Attributes
 		protected FileSystemWatcher PluginWatcher;
+		/// <summary>
+		/// Started when an I/O event if raised, and a delay is necessary.
+		/// Raises an event when the necessary timeout has passed.
+		/// </summary>
+		protected Timer PluginWatcherTimer;
+		private const int PluginWatcherMinimumWaitTimeDefault = 500;
+		/// <summary>
+		/// The minimum time (in milliseconds) that must elapse between the 
+		/// most recent I/O event in the plugin directory and the time that 
+		/// the changes are handled by the plugin manager.
+		/// </summary>
+		/// <remarks>
+		/// This becomes necessary because the <see cref="FileSystemWatcher"/>
+		/// tends to throw several events for just a single file I/O operation,
+		/// leading to many needless reloads of any new plugin.
+		/// </remarks>
+		public int PluginWatcherMinimumWaitTime
+		{
+			get
+			{
+				return (int) PluginWatcherTimer.Interval;
+			}
+			set
+			{
+				PluginWatcherTimer.Interval = value;
+			}
+		}
+		protected IONotificationQueue PendingPluginWatcherEvents;
 
 		public string PluginDirectory
 		{
@@ -63,20 +101,34 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Event handlers
-		private void PluginWatcher_New(object sender, FileSystemEventArgs e)
+		private void PluginWatcher_IOEvent(object sender, FileSystemEventArgs e)
 		{
-			PluginAppDomain pluginDomain = pluginAppDomains.Load(e.FullPath);
+			PluginWatcherTimer.Stop();
+			PendingPluginWatcherEvents.Enqueue(e);
+			PluginWatcherTimer.Start();
 		}
-
-		private void PluginWatcher_Deleted(object sender, FileSystemEventArgs e)
+		private void PluginWatcherTimer_Elapsed(object sender, ElapsedEventArgs te)
 		{
-			pluginAppDomains.Unload(e.FullPath);
-		}
-
-		private void PluginWatcher_Changed(object sender, FileSystemEventArgs e)
-		{
-			pluginAppDomains.Unload(e.FullPath);
-			pluginAppDomains.Load(e.FullPath);
+			while( PendingPluginWatcherEvents.Count > 0 )
+			{
+				FileSystemEventArgs e = PendingPluginWatcherEvents.Dequeue();
+				switch( e.ChangeType )
+				{
+					case WatcherChangeTypes.Created:
+						pluginAppDomains.Load(e.FullPath);
+						break;
+					case WatcherChangeTypes.Changed:
+						pluginAppDomains.Unload(e.FullPath);
+						pluginAppDomains.Load(e.FullPath);
+						break;
+					case WatcherChangeTypes.Deleted:
+						pluginAppDomains.Unload(e.FullPath);
+						break;
+					case WatcherChangeTypes.Renamed:
+						// Rename appdomain for the plugin so it can be found when deleted later.
+						break;
+				}
+			}
 		}
 
 		#endregion
