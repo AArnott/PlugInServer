@@ -17,7 +17,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 	public class WindowsServicesManagement : MarshalByRefObject, ISharingHandler
 	{
 		public const string ServiceName = "Windows Services Management";
-		internal const int PreferredPort = 9910;
+		internal const int DefaultPort = 9910;
 
 		#region Construction
 		public WindowsServicesManagement()
@@ -31,7 +31,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			get
 			{
-				return "http://" + Dns.GetHostName() + ":" + PreferredPort.ToString() + "/serviceadmin/";
+				return "http://" + Dns.GetHostName() + ":" + ActivePort.ToString() + "/serviceadmin/";
 			}
 		}
 		public bool CanProcessRequest(string firstLine)
@@ -217,11 +217,19 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 
 		#region IPlugin Members
 
+		private int ActivePort
+		{
+			get
+			{
+				string sPort = System.Configuration.ConfigurationSettings.AppSettings["WindowsServicesManagementPort"];
+				return (sPort != null) ? Convert.ToInt32(sPort) : DefaultPort;
+			}
+		}
 		public int[] Ports
 		{
 			get
 			{
-				return new int[] { PreferredPort };
+				return new int[] { ActivePort };
 			}
 		}
 
@@ -248,7 +256,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		public static void Main()
 		{
 			WindowsServicesManagement handler = new WindowsServicesManagement();
-			TcpListener listener = new TcpListener(IPAddress.Any, PreferredPort);
+			TcpListener listener = new TcpListener(IPAddress.Any, DefaultPort);
 			listener.Start();
 			try 
 			{
