@@ -124,7 +124,9 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				}
 				//SendToBrowser(channel, sRequestedFile);
 			}
-			
+			Console.WriteLine("Requested File: " + sRequestedFile);
+			sRequestedFile = sRequestedFile.Replace("%20"," ");
+			Console.WriteLine("Requested File with Spaces: " + sRequestedFile);
 			mimeType = getMimeType(sRequestedFile);
 			String sPhysicalFilePath = sLocalDir + sRequestedFile;
 			Console.WriteLine("File Requested: " + sPhysicalFilePath);
