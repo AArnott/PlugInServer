@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerGui", "ServerGui\Serv
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{2623CC32-D67D-4572-AF91-31B2B9CD613D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -69,6 +73,8 @@ Global
 		{583C001E-9937-470C-81BE-160F4E26FC85}.Debug.Build.0 = Debug|.NET
 		{583C001E-9937-470C-81BE-160F4E26FC85}.Release.ActiveCfg = Release|.NET
 		{583C001E-9937-470C-81BE-160F4E26FC85}.Release.Build.0 = Release|.NET
+		{2623CC32-D67D-4572-AF91-31B2B9CD613D}.Debug.ActiveCfg = Debug
+		{2623CC32-D67D-4572-AF91-31B2B9CD613D}.Release.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
