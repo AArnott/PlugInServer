@@ -82,7 +82,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			if (sDirName == "/")
 			{
 				sLocalDir = sMyWebServerRoot;
-				sLocalDir = GetLocalPath(sMyWebServerRoot, sDirName);
+				//sLocalDir = GetLocalPath(sMyWebServerRoot, sDirName);
 			}
 			else
 			{
