@@ -11,7 +11,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 	[Serializable]
 	public class PluginAppDomainCollection
 	{
-		private const bool FileNamesAreCaseSensitive = false;
+		private bool FileNamesAreCaseSensitive = (Path.PathSeparator == '/'); // little hack to detect Linux
 		#region Construction
 		public PluginAppDomainCollection(Services services)
 		{
