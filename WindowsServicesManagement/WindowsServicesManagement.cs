@@ -252,33 +252,5 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		}
 
 		#endregion
-
-		public static void Main()
-		{
-			WindowsServicesManagement handler = new WindowsServicesManagement();
-			TcpListener listener = new TcpListener(IPAddress.Any, DefaultPort);
-			listener.Start();
-			try 
-			{
-				while( true )
-				{
-					TcpClient client = listener.AcceptTcpClient();
-					try 
-					{
-						handler.HandleRequest(client.GetStream(), null, null);
-						client.GetStream().Close();
-					}
-					catch( IOException e ) 
-					{
-						Console.Error.WriteLine("Error:" + Environment.NewLine + e.ToString());
-					}
-					client.Close();
-				}
-			}
-			finally
-			{
-				listener.Stop();
-			}
-		}
 	}
 }
