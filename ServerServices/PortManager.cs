@@ -213,6 +213,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 				using( NetworkStream channel = new NetworkStream(openedSocket, false) )
 				{
 					IncomingRequest(channel, (IPEndPoint)openedSocket.LocalEndPoint, (IPEndPoint)openedSocket.RemoteEndPoint);
+					// eat remaining incoming data so that the connection will close
+					while( channel.DataAvailable ) channel.ReadByte();
 					channel.Close();
 				}
 			}
