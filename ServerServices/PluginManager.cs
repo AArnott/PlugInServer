@@ -166,21 +166,29 @@ namespace Byu.IT347.PluginServer.ServerServices
 			while( PendingPluginWatcherEvents.Count > 0 )
 			{
 				FileSystemEventArgs e = PendingPluginWatcherEvents.Dequeue();
-				switch( e.ChangeType )
+				try 
 				{
-					case WatcherChangeTypes.Created:
-						pluginAppDomains.Load(e.FullPath);
-						break;
-					case WatcherChangeTypes.Changed:
-						pluginAppDomains.Reload(e.FullPath);
-						break;
-					case WatcherChangeTypes.Deleted:
-						pluginAppDomains.Unload(e.FullPath);
-						break;
-					case WatcherChangeTypes.Renamed:
-						// Rename appdomain for the plugin so it can be found when deleted later.
-						// TODO: code here
-						break;
+					switch( e.ChangeType )
+					{
+						case WatcherChangeTypes.Created:
+							pluginAppDomains.Load(e.FullPath);
+							break;
+						case WatcherChangeTypes.Changed:
+							pluginAppDomains.Reload(e.FullPath);
+							break;
+						case WatcherChangeTypes.Deleted:
+							pluginAppDomains.Unload(e.FullPath);
+							break;
+						case WatcherChangeTypes.Renamed:
+							// Rename appdomain for the plugin so it can be found when deleted later.
+							// TODO: code here
+							break;
+					}
+				}
+				catch( Exception ex )
+				{
+					Console.Error.WriteLine("Error while handling {0} event for assembly {1}.\n{2}", e.ChangeType, e.FullPath, ex.ToString());
+					throw;
 				}
 			}
 		}

@@ -167,25 +167,5 @@ namespace Byu.IT347.PluginServer.ServerServices
 			}
 		}
 		#endregion
-
-		#region Event handlers
-		private void pluginDomain_DomainUnload(object sender, EventArgs e)
-		{
-			Console.WriteLine("Plug-in appdomain unloading.");
-
-			try 
-			{
-				// Any plugins being hosted from this app domain should be unloaded.
-				// TODO: code here
-			}
-			catch( Exception ex )
-			{
-				Console.Error.WriteLine("Error while shutting down plugin: {0}.", "[TODO: assemblyName here]");
-				Console.Error.WriteLine(ex.ToString());
-			}
-
-			// TODO: code here to make sure app domain no longer belongs to collection.
-		}
-		#endregion
 	}
 }
