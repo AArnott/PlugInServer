@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
@@ -214,6 +215,15 @@ namespace Byu.IT347.PluginServer.ServerServices
 					IncomingRequest(channel, (IPEndPoint)openedSocket.LocalEndPoint, (IPEndPoint)openedSocket.RemoteEndPoint);
 					channel.Close();
 				}
+			}
+			catch( SocketException ex )
+			{
+				Console.Error.WriteLine("Socket error while processing request: {0}.\n{1}", ex.ErrorCode, ex.ToString());
+				throw;
+			}
+			catch( IOException ex )
+			{
+				Console.Error.WriteLine("Error: {0}  Client probably disconnected prematurely.", ex.Message);
 			}
 			catch( Exception ex )
 			{
