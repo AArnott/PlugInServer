@@ -1,5 +1,6 @@
 using System;
 using Byu.IT347.PluginServer.PluginServices;
+using System.Net.Sockets;
 
 namespace Byu.IT347.PluginServer.Plugins.StaticHtml
 {
@@ -10,7 +11,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticHtml
 		}
 		#region IHandler Members
 
-		public void HandleRequest(System.IO.Stream request, System.IO.Stream response)
+		public void HandleRequest(NetworkStream stream)
 		{
 			// TODO:  Add StaticHtmlPlugIn.HandleRequest implementation
 		}

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.ServiceProcess;
+using System.Net.Sockets;
 using Byu.IT347.PluginServer.PluginServices;
 
 namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
@@ -18,10 +19,10 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 
 		#region IHandler Members
 
-		public void HandleRequest(Stream request, Stream response)
+		public void HandleRequest(NetworkStream stream)
 		{
-			StreamReader reader = new StreamReader(request);
-			StreamWriter writer = new StreamWriter(response);
+			StreamReader reader = new StreamReader(stream);
+			StreamWriter writer = new StreamWriter(stream);
 
 			WriteHeaders(writer);
 			writer.WriteLine("<html><body>");
