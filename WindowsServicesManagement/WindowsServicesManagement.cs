@@ -42,6 +42,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 			StreamWriter writer = new StreamWriter(stream);
 
 			ParseHeaders(reader);
+			if( url == "/favicon.ico" ) return; // don't respond
 			WriteHeaders(writer);
 			writer.WriteLine("<html><head>");
 			writer.WriteLine("<style>td { font-family: Arial; font-size: 12px; margin: 0; padding: 0; }</style>");

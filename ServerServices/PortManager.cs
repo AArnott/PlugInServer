@@ -144,8 +144,11 @@ namespace Byu.IT347.PluginServer.ServerServices
 			{
 				if( !portsToKeepOpen.Contains(openPort) )
 				{
-					OpenSockets[openPort].Shutdown(SocketShutdown.Both);
-					OpenSockets[openPort].Close();
+					if( OpenSockets[openPort].Connected ) 
+					{
+						OpenSockets[openPort].Shutdown(SocketShutdown.Both);
+						OpenSockets[openPort].Close();
+					}
 					OpenSockets.Remove(openPort);
 				}
 			}
@@ -155,8 +158,11 @@ namespace Byu.IT347.PluginServer.ServerServices
 			foreach( Socket socket in OpenSockets.AllSockets )
 			{
 				OpenSockets.Remove(socket);
-				socket.Shutdown(SocketShutdown.Both);
-				socket.Close();
+				if( socket.Connected ) 
+				{
+					socket.Shutdown(SocketShutdown.Both);
+					socket.Close();
+				}
 			}
 			Console.WriteLine("Sockets all closed.");
 		}
