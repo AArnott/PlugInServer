@@ -204,7 +204,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			string[] headers = SplitHeaders(reader);
 			url = HttpUtility.UrlDecode(firstLine.Split(' ')[1]);
-			cookie = null;
+			cookie = "always"; // just always give r/w access so that demo works
 			// search for cookie
 			foreach( string header in headers )
 			{
