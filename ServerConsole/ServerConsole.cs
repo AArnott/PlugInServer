@@ -20,6 +20,7 @@ namespace Byu.IT347.PluginServer.ServerConsole
 			string pluginDirectory = Path.Combine(Directory.GetCurrentDirectory(), PluginDirectoryName);
 			if( !Directory.Exists(pluginDirectory) ) Directory.CreateDirectory(pluginDirectory);
 			services.PluginDirectory = pluginDirectory;
+			services.Start();
 
 			Console.WriteLine("Watching directory for changes: {0}", services.PluginDirectory);
 			

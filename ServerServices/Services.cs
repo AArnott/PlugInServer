@@ -169,24 +169,17 @@ namespace Byu.IT347.PluginServer.ServerServices
 
 			try 
 			{
-				PortManager.ClosePorts();
-				PortManager.OpenPorts();
-				Console.WriteLine("Now listening on ports: {0}", intarraytostring(PortManager.Sockets));
+				if( Status == Status.Running ) 
+				{
+					PortManager.ClosePorts();
+					PortManager.OpenPorts();
+				}
 			}
 			catch( Exception e )
 			{
 				Console.WriteLine("Error: {0}", e.ToString());
 				throw;
 			}
-		}
-		private string intarraytostring(Socket[] array)
-		{
-			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-			foreach( Socket s in array )
-				sb.Append(((IPEndPoint)s.LocalEndPoint).Port + ", ");
-			if( sb.Length >= 2 )
-				sb.Length -= 2;
-			return sb.ToString();
 		}
 		#endregion
 

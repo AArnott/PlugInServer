@@ -68,15 +68,22 @@ namespace Byu.IT347.PluginServer.ServerServices
 				}
 			}
 			this.sockets = (Socket[]) sockets.ToArray(typeof(Socket));
+			Console.WriteLine("Now listening on ports: {0}", intarraytostring(Sockets));
+		}
+		private string intarraytostring(Socket[] array)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			foreach( Socket s in array )
+				sb.Append(((IPEndPoint)s.LocalEndPoint).Port + ", ");
+			if( sb.Length >= 2 )
+				sb.Length -= 2;
+			return sb.ToString();
 		}
 		public void ClosePorts()
 		{
 			if( Sockets == null ) return;
 			foreach( Socket socket in Sockets )
-			{
-				socket.Shutdown(SocketShutdown.Both);
 				socket.Close();
-			}
 			sockets = null;
 		}
 		#endregion
