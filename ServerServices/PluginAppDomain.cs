@@ -56,6 +56,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 
 			// Create the domain to load the plugin into.
 			AppDomain = AppDomain.CreateDomain(AssemblyName.FullName, PluginEvidence, setup );
+			
+			AppDomainExceptionHandler errorHandler = new AppDomainExceptionHandler(AppDomain);
+			errorHandler.Attach();
 		}
 		private void LoadAssemblyPlugins()
 		{
@@ -108,6 +111,34 @@ namespace Byu.IT347.PluginServer.ServerServices
 			Plugins = null;
 			AppDomain.Unload(AppDomain);
 			AppDomain = null;
+		}
+		#endregion
+
+		#region Error reporting
+		[Serializable]
+		class AppDomainExceptionHandler
+		{
+			AppDomain AppDomain;
+			public AppDomainExceptionHandler(AppDomain appDomain)
+			{
+				AppDomain = appDomain;
+			}
+
+			public void Attach()
+			{
+				AppDomain.UnhandledException += new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
+			}
+
+			public void Detach()
+			{
+				AppDomain.UnhandledException -= new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
+			}
+
+			public void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+			{
+				Console.Error.WriteLine("Unhandled exception in plug-in: {0}.  Details follow: \n{1}",
+					AppDomain.FriendlyName, (Exception)e.ExceptionObject);
+			}
 		}
 		#endregion
 	}

@@ -222,8 +222,15 @@ namespace Byu.IT347.PluginServer.ServerServices
 			foreach( IPlugin plugin in appDomain.Handlers )
 			{
 				Plugins.Remove( plugin );
-				Console.WriteLine("Stopping {0} handler plugin.", plugin.Name);
-				plugin.Shutdown();
+				try 
+				{
+					Console.WriteLine("Stopping {0} handler plugin.", plugin.Name);
+					plugin.Shutdown();
+				}
+				catch( System.Runtime.Remoting.RemotingException ex )
+				{
+					Console.Error.WriteLine("Plugin disconnected prematurely.\n{0}", ex.ToString());
+				}
 			}
 
 			OnChanged();
