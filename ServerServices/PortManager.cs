@@ -67,6 +67,26 @@ namespace Byu.IT347.PluginServer.ServerServices
 		protected PortSocketMap OpenSockets = new PortSocketMap();
 		#endregion
 
+		#region Events
+		public delegate void IncomingRequestEventHandler(NetworkStream channel, Socket socket);
+		/// <summary>
+		/// Fired whenever a request comes in through an open socket.
+		/// </summary>
+		public event IncomingRequestEventHandler IncomingRequest;
+		/// <summary>
+		/// Fires the <see cref="IncomingRequest"/> event.
+		/// </summary>
+		protected void OnIncomingRequest(NetworkStream channel, Socket socket)
+		{
+			if( channel == null ) throw new ArgumentNullException("channel");
+			if( socket == null ) throw new ArgumentNullException("socket");
+
+			IncomingRequestEventHandler incomingRequest = IncomingRequest;
+			if( incomingRequest == null ) return; // no handlers
+			incomingRequest(channel, socket);
+		}
+		#endregion
+
 		#region Operations
 		protected void OpenNewSockets()
 		{
@@ -107,6 +127,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 				OpenSockets.Remove(socket);
 				socket.Close();
 			}
+			Console.WriteLine("Sockets all closed.");
 		}
 		protected void RefreshSockets()
 		{
@@ -125,7 +146,47 @@ namespace Byu.IT347.PluginServer.ServerServices
 			Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
 			s.Bind( new IPEndPoint(IPAddress.Any, port) );
 			s.Listen(MaxConnectionQueueSize);
+			s.BeginAccept(new AsyncCallback(AcceptingSocket), s);
 			return s;
+		}
+		protected virtual void AcceptingSocket(IAsyncResult result)
+		{
+			// recover the listening socket
+			Socket listeningSocket = (Socket) result.AsyncState;
+
+			Socket openedSocket;
+			// the socket may be shutting down (thus calling this async callback), so catch it
+			try 
+			{
+				// retrieve the newly opened connection
+				openedSocket = listeningSocket.EndAccept(result);
+			}
+			catch( InvalidOperationException )
+			{
+				return;
+			}
+
+			// listen for a new connection right away.
+			listeningSocket.BeginAccept(new AsyncCallback(AcceptingSocket), listeningSocket);
+
+			// handle this request
+			try 
+			{
+				using( NetworkStream channel = new NetworkStream(openedSocket, false) )
+				{
+					IncomingRequest(channel, openedSocket);
+					channel.Close();
+				}
+			}
+			finally
+			{
+				// close socket to end connection
+				if( openedSocket.Connected ) 
+				{
+					openedSocket.Shutdown(SocketShutdown.Both);
+					openedSocket.Close();
+				}
+			}
 		}
 		#endregion
 
