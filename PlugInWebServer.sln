@@ -1,8 +1,4 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginServices", "PlugInServices\PluginServices.csproj", "{438EFDA2-CB1D-4F8F-A646-A96E118B835D}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticWeb", "StaticWeb\StaticWeb.csproj", "{DB1341CE-ED68-4D48-9978-8C148BDABB1B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -27,16 +23,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PHP", "PHP\PHP.csproj", "{9
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginServices", "PlugInServices\PluginServices.csproj", "{438EFDA2-CB1D-4F8F-A646-A96E118B835D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Debug.ActiveCfg = Debug|.NET
-		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Debug.Build.0 = Debug|.NET
-		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Release.ActiveCfg = Release|.NET
-		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Release.Build.0 = Release|.NET
 		{DB1341CE-ED68-4D48-9978-8C148BDABB1B}.Debug.ActiveCfg = Debug|.NET
 		{DB1341CE-ED68-4D48-9978-8C148BDABB1B}.Debug.Build.0 = Debug|.NET
 		{DB1341CE-ED68-4D48-9978-8C148BDABB1B}.Release.ActiveCfg = Release|.NET
@@ -61,6 +57,10 @@ Global
 		{9BA41979-8F84-400D-B05D-F9B7B0CFC301}.Debug.Build.0 = Debug|.NET
 		{9BA41979-8F84-400D-B05D-F9B7B0CFC301}.Release.ActiveCfg = Release|.NET
 		{9BA41979-8F84-400D-B05D-F9B7B0CFC301}.Release.Build.0 = Release|.NET
+		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Debug.ActiveCfg = Debug|.NET
+		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Debug.Build.0 = Debug|.NET
+		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Release.ActiveCfg = Release|.NET
+		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
