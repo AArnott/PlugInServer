@@ -26,7 +26,9 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 			int end = urlrequest.IndexOf(" ",start);
 			string url = urlrequest.Substring(start,end-start);
 			//
-			ProcessStartInfo psi = new ProcessStartInfo("C:\\php\\php-cgi.exe", "C:\\php\\" + url);
+			ProcessStartInfo psi = new ProcessStartInfo(
+				System.Configuration.ConfigurationSettings.AppSettings["PHPInterpreterPath"], 
+				Path.Combine(System.Configuration.ConfigurationSettings.AppSettings["PublicRoot"], url));
 			psi.UseShellExecute =false;
 			psi.RedirectStandardOutput = true;
 				
