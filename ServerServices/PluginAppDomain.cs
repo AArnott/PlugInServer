@@ -48,8 +48,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 			// Teach the new appdomain where to find the plugin assemblies
 			setup.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory;
 			// Teach the new appdomain where the plugins can find the web server assemblies
-			Uri assemblyPath = new Uri( Path.GetDirectoryName(AssemblyName.CodeBase) );
-			setup.PrivateBinPath = assemblyPath.LocalPath;
+			Uri assemblyPath = new Uri( AssemblyName.CodeBase );
+			setup.PrivateBinPath = Path.GetDirectoryName(assemblyPath.LocalPath);
 			// Shadow-copy assembly to avoid file locking
 			setup.ShadowCopyFiles = "true";
 			setup.ShadowCopyDirectories = setup.ApplicationBase + ";" + setup.PrivateBinPath;
