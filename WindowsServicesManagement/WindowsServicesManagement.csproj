@@ -15,7 +15,7 @@
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Library"
+                OutputType = "Exe"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
                 RootNamespace = "Byu.IT347.PluginServer.Plugins.WindowsServicesManagement"
@@ -78,6 +78,16 @@
                     Name = "System.ServiceProcess"
                     AssemblyName = "System.ServiceProcess"
                     HintPath = "..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.ServiceProcess.dll"
+                />
+                <Reference
+                    Name = "System.Web"
+                    AssemblyName = "System.Web"
+                    HintPath = "..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
             </References>
         </Build>
