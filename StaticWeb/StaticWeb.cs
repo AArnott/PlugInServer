@@ -185,6 +185,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			
 			sw.Flush();*/
 			Console.WriteLine("Encoding: ");
+			
 			SendToBrowser(channel, Encoding.ASCII.GetBytes(data));
 		}
 		public void SendToBrowser(NetworkStream channel, Byte[] bSendData)
