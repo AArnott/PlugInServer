@@ -1,6 +1,6 @@
 <project SchemaVersion="1.3">
     <assemblies>
-        <assembly location="C:\Documents and Settings\ala55\My Documents\Visual Studio Projects\BYU School\IT 347 Project\PlugInServer\Chat\bin\Release\Chat.dll" documentation="" />
+        <assembly location=".\Chat\bin\Release\Chat.dll" documentation="" />
         <assembly location=".\PHP\bin\Release\PHP.dll" documentation="" />
         <assembly location=".\PlugInServices\bin\Release\PluginServices.dll" documentation="" />
         <assembly location=".\ServerConsole\bin\Release\ServerConsole.exe" documentation="" />
@@ -28,6 +28,7 @@
             <property name="OutputDirectory" value=".\doc\" />
             <property name="HtmlHelpName" value="Plugin Server Documentation" />
             <property name="Title" value="Plugin Server Documentation" />
+            <property name="OutputTarget" value="HtmlHelp" />
         </documenter>
         <documenter name="VS.NET 2003">
             <property name="OutputDirectory" value=".\doc\" />
