@@ -40,6 +40,14 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 		#region IHandler Members
 
 		static int counter = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="channel"></param>
+		/// <param name="firstLine"></param>
+		/// <param name="local"></param>
+		/// <param name="remote"></param>
+		/// <remarks></remarks>
 		public void HandleRequest(NetworkStream channel, string firstLine, IPEndPoint local, IPEndPoint remote)
 		{
 			string header = "";
@@ -227,7 +235,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			mt.Add("jpeg", "image/jpeg");
 			mt.Add("jpg", "image/jpeg");
 			mt.Add("png", "image/png");
-
+			mt.Add("chm", "application/octet-stream");
 			//Response.WriteLine("Content-type: " + mt["gif"]);
 			request = request.ToLower();
 			int startPosition = request.IndexOf(".");
