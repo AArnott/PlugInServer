@@ -130,7 +130,6 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			else
 			{
 				byte[] bytes = null;
-				string sMyLine = "";
 				try
 				{
 					using( FileStream fs = new FileStream(sPhysicalFilePath, FileMode.Open) )
@@ -163,17 +162,11 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			}
 			
 			//Test Puposes only (Creates Static Page) Maybe use to create the 404 file not found page
-			string content = CreateContent(remote);
+			//string content = CreateContent(remote);
 			
 			//Byte[] byteHtmlData = Encoding.ASCII.GetBytes(htmlPage);
 			//string sMimeType = "";
 			//int iTotBytes = byteHtmlData.Length;
-			
-			Byte[] byteHtmlData = Encoding.ASCII.GetBytes(content);
-			
-			int TotBytesToSend = byteHtmlData.Length;
-			
-			
 			
 			//string header = CreateHeader(mimeType, TotalBytesToSend);
 			//SendToBrowser(channel, header);
@@ -202,7 +195,6 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 		}
 		public void SendToBrowser(NetworkStream channel, Byte[] bSendData)
 		{
-			int numBytes = 0;
 			try
 			{				
 				channel.Write(bSendData,0,bSendData.Length);
