@@ -4,10 +4,10 @@ using Byu.IT347.PluginServer.PluginServices;
 
 namespace Byu.IT347.PluginServer.ServerServices
 {
-	public class PluginCollection : IEnumerable
+	public class AppDomainPluginCollection : IEnumerable
 	{
 		#region Construction
-		public PluginCollection()
+		public AppDomainPluginCollection()
 		{
 		}
 		#endregion
@@ -37,7 +37,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		public class PluginCollectionEnumerator : IEnumerator
 		{
 			IEnumerator enumerator;
-			internal PluginCollectionEnumerator(PluginCollection collection)
+			internal PluginCollectionEnumerator(AppDomainPluginCollection collection)
 			{
 				if( collection == null ) throw new ArgumentNullException("collection");
 				enumerator = collection.plugins.GetEnumerator();

@@ -34,8 +34,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 		private void InitPluginsCollections()
 		{
-			filters = new PluginCollection();
-			handlers = new PluginCollection();
+			filters = new AppDomainPluginCollection();
+			handlers = new AppDomainPluginCollection();
 		}
 		private void InitializePluginEvidence()
 		{
@@ -86,10 +86,10 @@ namespace Byu.IT347.PluginServer.ServerServices
 		protected AssemblyName AssemblyName;
 		protected IPlugin[] Plugins = null;
 
-		private PluginCollection filters;
-		public PluginCollection Filters { get { return filters; } }
-		private PluginCollection handlers;
-		public PluginCollection Handlers { get { return handlers; } }
+		private AppDomainPluginCollection filters;
+		public AppDomainPluginCollection Filters { get { return filters; } }
+		private AppDomainPluginCollection handlers;
+		public AppDomainPluginCollection Handlers { get { return handlers; } }
 		#endregion
 
 		#region Operations

@@ -89,6 +89,10 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "AppDomainPluginCollection.cs"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -105,11 +109,6 @@
                 />
                 <File
                     RelPath = "PluginAppDomainCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PluginCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
