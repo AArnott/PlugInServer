@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsServicesManagement",
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat", "Chat\Chat.csproj", "{F4362E47-F7D6-4A7B-AC17-3EC12C966B5E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -45,6 +49,10 @@ Global
 		{30A78FE3-5210-43F8-BDD0-587D09A9FA92}.Debug.Build.0 = Debug|.NET
 		{30A78FE3-5210-43F8-BDD0-587D09A9FA92}.Release.ActiveCfg = Release|.NET
 		{30A78FE3-5210-43F8-BDD0-587D09A9FA92}.Release.Build.0 = Release|.NET
+		{F4362E47-F7D6-4A7B-AC17-3EC12C966B5E}.Debug.ActiveCfg = Debug|.NET
+		{F4362E47-F7D6-4A7B-AC17-3EC12C966B5E}.Debug.Build.0 = Debug|.NET
+		{F4362E47-F7D6-4A7B-AC17-3EC12C966B5E}.Release.ActiveCfg = Release|.NET
+		{F4362E47-F7D6-4A7B-AC17-3EC12C966B5E}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
