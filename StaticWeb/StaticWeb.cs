@@ -18,8 +18,15 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 
 		public bool CanProcessRequest(string firstLine)
 		{
-			//return firstLine.IndexOf(".htm") > 0;
-			return true;
+			if(firstLine.IndexOf(".php") > 0 || firstLine.IndexOf(".jsp") > 0 || firstLine.IndexOf(".asp") > 0)
+
+			{	
+				return false;
+			}
+			else 
+			{
+				return true;
+			}
 		}
 
 		public void HandleRequest(NetworkStream stream, IPEndPoint local, IPEndPoint remote)
