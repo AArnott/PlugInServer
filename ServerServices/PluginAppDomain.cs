@@ -7,11 +7,19 @@ using Byu.IT347.PluginServer.PluginServices;
 namespace Byu.IT347.PluginServer.ServerServices
 {
 	/// <summary>
-	/// Summary description for PluginAppDomain.
+	/// An <see cref="AppDomain"/> that hosts a single
+	/// assembly with at least one plugin.
 	/// </summary>
 	public class PluginAppDomain
 	{
 		#region Construction
+		/// <summary>
+		/// Creates an instance of the <see cref="PluginAppDomain"/> class.
+		/// </summary>
+		/// <param name="assemblyName">
+		/// The <see cref="AssemblyName"/> of the assembly to load
+		/// into the new AppDomain.
+		/// </param>
 		public PluginAppDomain(AssemblyName assemblyName)
 		{
 			if( assemblyName == null ) throw new ArgumentNullException("assemblyName");
@@ -86,6 +94,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 		protected Evidence PluginEvidence;
 		protected AppDomain AppDomain = null;
 		private AssemblyName assemblyName;
+		/// <summary>
+		/// Gets the <see cref="AssemblyName"/> of the loaded plugin assembly.
+		/// </summary>
 		public AssemblyName AssemblyName
 		{
 			get
@@ -96,12 +107,21 @@ namespace Byu.IT347.PluginServer.ServerServices
 		protected IPlugin[] Plugins = null;
 
 		private AppDomainPluginCollection filters;
+		/// <summary>
+		/// Gets a list of all <see cref="IFilter"/> plugins.
+		/// </summary>
 		public AppDomainPluginCollection Filters { get { return filters; } }
 		private AppDomainPluginCollection handlers;
+		/// <summary>
+		/// Gets a list of all <see cref="IHandler"/> plugins.
+		/// </summary>
 		public AppDomainPluginCollection Handlers { get { return handlers; } }
 		#endregion
 
 		#region Operations
+		/// <summary>
+		/// Unloads the <see cref="AppDomain"/> and the contained plugin assembly.
+		/// </summary>
 		public void Unload()
 		{
 			Console.WriteLine("Unloading {0} assembly.", AssemblyName.Name);

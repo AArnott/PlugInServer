@@ -11,10 +11,17 @@ namespace Byu.IT347.PluginServer.ServerServices
 	public class IONotificationQueue
 	{
 		#region Construction
+		/// <summary>
+		/// Creates an instance of the <see cref="IONotificationQueue"/> class.
+		/// </summary>
 		public IONotificationQueue()
 		{
 			queue = new ArrayList();
 		}
+		/// <summary>
+		/// Creates an instance of the <see cref="IONotificationQueue"/> class,
+		/// with memory reserved for a given queue capacity.
+		/// </summary>
 		public IONotificationQueue(int capacity)
 		{
 			queue = new ArrayList(capacity);
@@ -23,6 +30,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 
 		#region Attributes
 		protected ArrayList queue;
+		/// <summary>
+		/// Gets the number of elements in the queue.
+		/// </summary>
 		public int Count
 		{
 			get
@@ -40,6 +50,10 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Operations
+		/// <summary>
+		/// Adds a <see cref="FileSystemEventArgs">file system event</see>
+		/// to the queue.
+		/// </summary>
 		public void Enqueue(FileSystemEventArgs e)
 		{
 			if( e == null ) throw new ArgumentNullException("e");
@@ -53,6 +67,13 @@ namespace Byu.IT347.PluginServer.ServerServices
 				queue.Add(e);
 			}
 		}
+		/// <summary>
+		/// Removes the oldest <see cref="FileSystemEventArgs">file system event</see>
+		/// from the queue.
+		/// </summary>
+		/// <returns>
+		/// The oldest, removed <see cref="FileSystemEventArgs">file system event</see>.
+		/// </returns>
 		public FileSystemEventArgs Dequeue()
 		{
 			lock( queue ) 
@@ -64,6 +85,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 				return e;
 			}
 		}
+		/// <summary>
+		/// Clears the queue of <see cref="FileSystemEventArgs">file system events</see>.
+		/// </summary>
 		public void Clear()
 		{
 			queue.Clear();

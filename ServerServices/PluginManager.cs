@@ -7,11 +7,17 @@ using Byu.IT347.PluginServer.PluginServices;
 namespace Byu.IT347.PluginServer.ServerServices
 {
 	/// <summary>
-	/// Summary description for PluginManager.
+	/// Manages the automatic loading and unloading of plugins.
 	/// </summary>
 	public class PluginManager : IEnumerable
 	{
 		#region Construction
+		/// <summary>
+		/// Creates an instance of the <see cref="PluginManager"/> class.
+		/// </summary>
+		/// <param name="server">
+		/// A reference to the IServer instance that will host the plugins.
+		/// </param>
 		public PluginManager(IServer server)
 		{
 			Server = server;
@@ -48,6 +54,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 		protected readonly IServer Server;
 		internal PluginAppDomainCollection pluginAppDomains;
 		protected ArrayList Plugins = new ArrayList();
+		/// <summary>
+		/// The number of plugins that have been loaded, across all assemblies.
+		/// </summary>
 		public int Count
 		{
 			get
@@ -57,6 +66,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 
 		private Status status = Status.Stopped;
+		/// <summary>
+		/// The <see cref="Status"/> of the <see cref="PluginManager"/>.
+		/// </summary>
 		public Status Status
 		{
 			get
@@ -145,6 +157,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Events
+		/// <summary>
+		/// Fired when a plugin has just been loaded or unloaded.
+		/// </summary>
 		public event EventHandler Changed;
 		protected virtual void OnChanged()
 		{
@@ -238,6 +253,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region IEnumerable Members
+		/// <summary>
+		/// Prepares an enumerator for iterating over all the loaded plugins.
+		/// </summary>
 		public IEnumerator GetEnumerator()
 		{
 			return Plugins.GetEnumerator();

@@ -9,15 +9,25 @@ using Byu.IT347.PluginServer.PluginServices;
 namespace Byu.IT347.PluginServer.ServerServices
 {
 	/// <summary>
-	/// Summary description for PortManager.
+	/// Manages the opening, closing and sharing of network ports.
 	/// </summary>
 	public class PortManager
 	{
+		/// <summary>
+		/// The number of connections that one port will allow to 
+		/// queue up while the server is behind in accepting connections.
+		/// </summary>
 		public const int MaxConnectionQueueSize = 10;
 		protected const int PortUnavailableErrorCode = 10048;
 		protected const int PortAccessDeniedErrorCode = 10013;
 
 		#region Construction
+		/// <summary>
+		/// Creates an instance of the <see cref="PortManager"/> class.
+		/// </summary>
+		/// <param name="services">
+		/// A reference to the containing the hosting <see cref="Services"/>.
+		/// </param>
 		public PortManager(Services services)
 		{
 			Services = services;
@@ -28,6 +38,16 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#region Attributes
 		protected readonly Services Services;
 		private Status status = Status.Stopped;
+		/// <summary>
+		/// Gets/sets the status of the port manager.
+		/// </summary>
+		/// <remarks>
+		/// A running port manager opens and closes ports as needed 
+		/// when plugins are loaded and unloaded.
+		/// A paused port manager does not open new ports or close old ones
+		/// as plugins are loaded and unloaded.
+		/// A stopped port manager has all its ports closed.
+		/// </remarks>
 		public Status Status
 		{
 			get
@@ -92,6 +112,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Operations
+		/// <summary>
+		/// Gets a list of all plugins that are listening on a given port.
+		/// </summary>
 		public IHandler[] ListHandlersOnPort(int port)
 		{
 			ArrayList handlers = new ArrayList(Services.Count);
@@ -214,12 +237,18 @@ namespace Byu.IT347.PluginServer.ServerServices
 			protected Socket Socket;
 			protected PortManager PortManager;
 
+			/// <summary>
+			/// Creates an instance of the <see cref="RequestHandler"/> class.
+			/// </summary>
 			public RequestHandler(PortManager portManager, Socket socket)
 			{
 				this.Socket = socket;
 				this.PortManager = portManager;
 			}
 
+			/// <summary>
+			/// Passese an incoming request to a particular plugin for handling.
+			/// </summary>
 			public virtual void HandleRequest()
 			{
 				try 

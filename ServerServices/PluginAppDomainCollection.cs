@@ -8,11 +8,21 @@ using Byu.IT347.PluginServer.PluginServices;
 
 namespace Byu.IT347.PluginServer.ServerServices
 {
+	/// <summary>
+	/// Manages the collection of <see cref="PluginAppDomain"/> objects
+	/// loaded by the server.
+	/// </summary>
 	[Serializable]
 	public class PluginAppDomainCollection
 	{
 		private bool FileNamesAreCaseSensitive = (Path.PathSeparator == '/'); // little hack to detect Linux
 		#region Construction
+		/// <summary>
+		/// Creates an instance of the <see cref="PluginAppDomainCollection"/> class.
+		/// </summary>
+		/// <param name="services">
+		/// A reference to the hosting <see cref="Services"/> object.
+		/// </param>
 		public PluginAppDomainCollection(Services services)
 		{
 			this.services = services;
@@ -22,6 +32,10 @@ namespace Byu.IT347.PluginServer.ServerServices
 
 		#region Attributes
 		protected Services services;
+		/// <summary>
+		/// Gets the number of <see cref="PluginAppDomain"/> objects
+		/// that are currently loaded.
+		/// </summary>
 		public int Count
 		{
 			get
@@ -30,14 +44,25 @@ namespace Byu.IT347.PluginServer.ServerServices
 			}
 		}
 		private HybridDictionary appdomains;
+		/// <summary>
+		/// Checks whether a given assembly is loaded in the server.
+		/// </summary>
 		public bool Contains(AssemblyName assemblyName)
 		{
 			return appdomains.Contains(assemblyName.FullName);
 		}
+		/// <summary>
+		/// Checks whether a given <see cref="PluginAppDomain"/> is already
+		/// a member of this collection.
+		/// </summary>
 		public bool Contains(PluginAppDomain appdomain)
 		{
 			return Contains(appdomain.AssemblyName);
 		}
+		/// <summary>
+		/// Gets the <see cref="PluginAppDomain"/> for the 
+		/// given <see cref="AssemblyName"/>.
+		/// </summary>
 		public PluginAppDomain this[AssemblyName assemblyName]
 		{
 			get
@@ -45,6 +70,17 @@ namespace Byu.IT347.PluginServer.ServerServices
 				return (PluginAppDomain) appdomains[assemblyName.FullName];
 			}
 		}
+		/// <summary>
+		/// Gets the <see cref="AssemblyName"/> for a loaded assembly 
+		/// at a given path in the filesystem.  
+		/// </summary>
+		/// <param name="assemblyPath">
+		/// The physical path in the file system of the assembly.
+		/// </param>
+		/// <returns>
+		/// The <see cref="AssemblyName"/> of the assembly if the assembly
+		/// is already loaded in the collection.
+		/// </returns>
 		public AssemblyName FindAssemblyNameFor(string assemblyPath)
 		{
 			Uri assemblyUri = new Uri(assemblyPath);
@@ -56,7 +92,14 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Events
+		/// <summary>
+		/// The delegate used by the <see cref="AppDomainLoaded"/> 
+		/// and <see cref="AppDomainUnloading"/> events.
+		/// </summary>
 		public delegate void AppDomainEventHandler(PluginAppDomain appDomain);
+		/// <summary>
+		/// Fired when a new <see cref="PluginAppDomain"/> is loaded.
+		/// </summary>
 		public event AppDomainEventHandler AppDomainLoaded;
 		protected void OnAppDomainLoaded(PluginAppDomain appDomain)
 		{
@@ -64,6 +107,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 			if( appDomainLoaded == null ) return; // no listeners
 			appDomainLoaded(appDomain);
 		}
+		/// <summary>
+		/// Fired when a loaded <see cref="PluginAppDomain"/> is about to be unloaded.
+		/// </summary>
 		public event AppDomainEventHandler AppDomainUnloading;
 		protected void OnAppDomainUnloading(PluginAppDomain appDomain)
 		{
@@ -74,10 +120,30 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Operations
+		/// <summary>
+		/// Loads the plugins in a given assembly into the server.
+		/// </summary>
+		/// <param name="assemblyPath">
+		/// The file system path to the assembly to load.
+		/// </param>
+		/// <returns>
+		/// The <see cref="PluginAppDomain"/> created to host the
+		/// loaded assembly.
+		/// </returns>
 		public PluginAppDomain Load(string assemblyPath)
 		{
 			return Load(AssemblyName.GetAssemblyName(assemblyPath));
 		}
+		/// <summary>
+		/// Loads the plugins in a given assembly into the server.
+		/// </summary>
+		/// <param name="assemblyName">
+		/// The <see cref="AssemblyName"/> of the plugin assembly to load.
+		/// </param>
+		/// <returns>
+		/// The <see cref="PluginAppDomain"/> created to host the
+		/// loaded assembly.
+		/// </returns>
 		public PluginAppDomain Load(AssemblyName assemblyName)
 		{
 			try 
@@ -95,12 +161,21 @@ namespace Byu.IT347.PluginServer.ServerServices
 				return null;
 			}
 		}
+		/// <summary>
+		/// Unloads a plugin assembly.
+		/// </summary>
+		/// <param name="assemblyPath">
+		/// The file system path of the assembly to unload.
+		/// </param>
 		public void Unload(string assemblyPath)
 		{
 			AssemblyName assemblyName = FindAssemblyNameFor(assemblyPath);
 			if( assemblyName == null ) return;
 			Unload(this[assemblyName]);
 		}
+		/// <summary>
+		/// Unloads a <see cref="PluginAppDomain"/>.
+		/// </summary>
 		public void Unload(PluginAppDomain appdomain)
 		{
 			if( !Contains( appdomain ) ) return;
@@ -108,6 +183,12 @@ namespace Byu.IT347.PluginServer.ServerServices
 			appdomains.Remove( appdomain.AssemblyName.FullName );
 			appdomain.Unload();
 		}
+		/// <summary>
+		/// Unloads and reloads a plugin assembly.
+		/// </summary>
+		/// <param name="assemblyPath">
+		/// The file system path of the assembly to reload.
+		/// </param>
 		public void Reload(string assemblyPath)
 		{
 			Status oldPortManagerStatus = services.PortManager.Status;
@@ -117,6 +198,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 			Load(assemblyPath);
 			services.PortManager.Status = oldPortManagerStatus;
 		}
+		/// <summary>
+		/// Unloads all plugin assemblies.
+		/// </summary>
 		public void UnloadAll()
 		{
 			lock( appdomains )
@@ -127,6 +211,16 @@ namespace Byu.IT347.PluginServer.ServerServices
 					Unload(appdomainsArray[i]);
 			}
 		}
+		/// <summary>
+		/// Loads all plugin assemblies found in a given directory.
+		/// </summary>
+		/// <param name="assemblyDirectory">
+		/// The file system directory to scan for plugins.
+		/// </param>
+		/// <returns>
+		/// A list of all <see cref="PluginAppDomain"/> objects 
+		/// created to host the plugin assemblies.
+		/// </returns>
 		public PluginAppDomain[] LoadAll(string assemblyDirectory)
 		{
 			ArrayList domainsLoaded = new ArrayList();

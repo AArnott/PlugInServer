@@ -11,9 +11,22 @@ using System.Timers;
 
 namespace Byu.IT347.PluginServer.ServerServices
 {
+	/// <summary>
+	/// The main plugin server class.
+	/// </summary>
+	/// <remarks>
+	/// This class is used by the thin GUI and text console frontends
+	/// applications, and all logic is in this class.  It is stored in
+	/// this library rather than the actual application frontends so that
+	/// it can appear in code just once, and bug fixes in the GUI app
+	/// will therefore automatically benefit the console app.
+	/// </remarks>
 	public class Services : MarshalByRefObject, IServer
 	{
 		#region Construction
+		/// <summary>
+		/// Creates an instance off the <see cref="Services"/> class.
+		/// </summary>
 		public Services()
 		{
 			InitializePluginManager();
@@ -40,6 +53,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#region Attributes
 
 		private Status status = Status.Stopped;
+		/// <summary>
+		/// The running status of the plugin server.
+		/// </summary>
 		public Status Status
 		{
 			get
@@ -48,6 +64,9 @@ namespace Byu.IT347.PluginServer.ServerServices
 			}
 		}
 
+		/// <summary>
+		/// The directory to watch for plugins to install.
+		/// </summary>
 		public string PluginDirectory
 		{
 			get
@@ -76,6 +95,12 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Operations
+		/// <summary>
+		/// Starts the plugin server.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">
+		/// Thrown when the server is already in the <see cref="Status.Running"/> state.
+		/// </exception>
 		public void Start()
 		{
 			if( status == Status.Running ) throw new InvalidOperationException("Already running.");
@@ -84,6 +109,12 @@ namespace Byu.IT347.PluginServer.ServerServices
 			PortManager.Status = status; // start port manager after plugins so we only open ports once
 		}
 
+		/// <summary>
+		/// Stops the plugin server.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">
+		/// Thrown when the server is already in the <see cref="Status.Stopped"/> state.
+		/// </exception>
 		public void Stop()
 		{
 			if( status == Status.Stopped ) throw new InvalidOperationException("Already stopped.");
@@ -92,6 +123,12 @@ namespace Byu.IT347.PluginServer.ServerServices
 			PluginManager.Status = status;
 		}
 
+		/// <summary>
+		/// Pauses the plugin server.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">
+		/// Thrown when the server is already in the <see cref="Status.Paused"/> state.
+		/// </exception>
 		public void Pause()
 		{
 			if( status == Status.Paused ) throw new InvalidOperationException("Already paused.");
@@ -102,12 +139,26 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region IServer Members
-
+		/// <summary>
+		/// Unloads a plugin.
+		/// </summary>
+		/// <param name="Plugin">
+		/// The plugin to unload.
+		/// </param>
+		/// <remarks>
+		/// This method can be called by the plugin to be unloaded.
+		/// It provides a way for a plugin to unload itself in case of 
+		/// an unrecoverable error.
+		/// </remarks>
 		public void SurrenderPlugin(IPlugin Plugin)
 		{
 			// TODO:  Add Services.SurrenderPlugin implementation
 		}
 
+		/// <summary>
+		/// Prepares an <see cref="IEnumerator"/> object for iterating
+		/// over all the loaded plugins.
+		/// </summary>
 		public IEnumerator GetEnumerator()
 		{
 			return PluginManager.GetEnumerator();
