@@ -101,7 +101,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 				foreach( int portTest in handler.Ports )
 					if( port == portTest )
 					{
-						handlers.Add( handler );
+						if( handlers.Count == 0 || handler is ISharingHandler )
+							handlers.Add( handler );
 						break;
 					}
 			}

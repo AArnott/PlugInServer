@@ -110,12 +110,21 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#region Event handlers
 		private void PortManager_IncomingRequest(NetworkStream channel, IPEndPoint local, IPEndPoint remote)
 		{
-			// look for first handler willing to take this request
-			foreach( IHandler handler in PortManager.ListHandlersOnPort(local.Port) )
+			IHandler[] handlers = PortManager.ListHandlersOnPort(local.Port);
+
+			// Read first line of request if the port is shared.
+			if( handlers[0] is ISharingHandler && handlers.Length > 1 )
 			{
-				handler.HandleRequest(channel, local, remote);
-				break;
+				string firstLine = StreamHelps.ReadLine(channel);
+				foreach( ISharingHandler handler in handlers )
+					if( handler.CanProcessRequest(firstLine.ToString()) )
+					{
+						handler.HandleRequest(channel, firstLine.ToString(), local, remote);
+						break;
+					}
 			}
+			else // non-sharing port
+				handlers[0].HandleRequest(channel, local, remote);
 		}
 		#endregion
 	}

@@ -11,16 +11,16 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 {
 	
 	/// Plugin for dynamic server to handle PHP requests	
-	public class PHPplugin : MarshalByRefObject, IHandler
+	public class PHPplugin : MarshalByRefObject, ISharingHandler
 	{
 		
-		#region IHandler Members
-		
-		public void HandleRequest( NetworkStream stream, IPEndPoint local, IPEndPoint remote )
+		#region ISharingHandler Members
+
+		public void HandleRequest(NetworkStream stream, string firstLine, IPEndPoint local, IPEndPoint remote)
 		{
 			StreamReader sr = new StreamReader(stream);
 			StreamWriter sw = new StreamWriter(stream);
-			string urlrequest = sr.ReadLine();
+			string urlrequest = firstLine;
 			//
 			int start = urlrequest.IndexOf("/")+1;
 			int end = urlrequest.IndexOf(" ",start);
@@ -29,16 +29,35 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 			ProcessStartInfo psi = new ProcessStartInfo(
 				System.Configuration.ConfigurationSettings.AppSettings["PHPInterpreterPath"], 
 				Path.Combine(System.Configuration.ConfigurationSettings.AppSettings["PublicRoot"], url));
-			psi.UseShellExecute =false;
+			psi.UseShellExecute = false;
 			psi.RedirectStandardOutput = true;
 				
 			Process proc = Process.Start(psi);
 			sw.Write("HTTP/1.0 200 OK\r\n");
 			while( !proc.HasExited )
-			{
 				sw.Write(proc.StandardOutput.ReadToEnd());
-			}
 			sw.Flush();
+		}
+
+		public bool CanProcessRequest(string firstLine)
+		{
+			if(firstLine.IndexOf(".php") <= 0)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		#endregion
+
+		#region IHandler Members
+		
+		public void HandleRequest( NetworkStream stream, IPEndPoint local, IPEndPoint remote )
+		{
+			HandleRequest(stream, StreamHelps.ReadLine(stream), local, remote);
 		}
 
 		#endregion
@@ -58,7 +77,7 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 		{ 
 			get
 			{
-				return new int[] {80};
+				return new int[] {80,8080};
 			}
 		}
 
@@ -73,19 +92,7 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 
 		}
 
-		public bool CanProcessRequest(string url)
-		{
-			if(url.IndexOf(".php") <= 0)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
-
 		#endregion
-	
+
 	}
 }

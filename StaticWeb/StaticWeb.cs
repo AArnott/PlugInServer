@@ -9,19 +9,32 @@ using System.Collections.Specialized;
 
 namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 {
-	public class StaticWebPlugIn : MarshalByRefObject, IHandler
+	public class StaticWebPlugIn : MarshalByRefObject, ISharingHandler
 	{
 		public StaticWebPlugIn()
 		{
 		}
+		#region ISharingHandler Members
+
+		public bool CanProcessRequest(string firstLine)
+		{
+			return firstLine.IndexOf(".htm") > 0;
+		}
+
+		public void HandleRequest(NetworkStream stream, IPEndPoint local, IPEndPoint remote)
+		{
+			HandleRequest(stream, StreamHelps.ReadLine(stream), local, remote);
+		}
+
+		#endregion
 		#region IHandler Members
 
 		static int counter = 0;
-		public void HandleRequest(NetworkStream channel, IPEndPoint local, IPEndPoint remote)
+		public void HandleRequest(NetworkStream channel, string firstLine, IPEndPoint local, IPEndPoint remote)
 		{
 			string sMyWebServerRoot = "C:\\MyWebServerRoot\\";
-			StreamReader sr = new StreamReader(channel);
-			string url = sr.ReadLine();
+			//StreamReader sr = new StreamReader(channel);
+			string url = firstLine;
 			//Console.WriteLine(url);
 			if( url.StartsWith("GET /favicon.ico ") ) return; // ignore favicon requests
 			//StreamWriter sw = new StreamWriter(channel);
@@ -239,12 +252,6 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 
 		#region IPlugin Members
 
-		public bool CanProcessRequest(string url)
-		{
-			// TODO:  Add StaticWebPlugIn.CanProcessRequest implementation
-			return false;
-		}
-
 		public int[] Ports
 		{
 			get
@@ -284,5 +291,6 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 		}
 
 		#endregion
+
 	}
 }

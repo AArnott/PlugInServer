@@ -14,7 +14,7 @@ using System.Net;
 
 namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 {
-	public class WindowsServicesManagement : MarshalByRefObject, IHandler
+	public class WindowsServicesManagement : MarshalByRefObject, ISharingHandler
 	{
 		public const string ServiceName = "Windows Services Management";
 		internal const int PreferredPort = 9910;
@@ -31,17 +31,26 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			get
 			{
-				return "http://" + Dns.GetHostName() + ":" + PreferredPort.ToString() + "/";
+				return "http://" + Dns.GetHostName() + ":" + PreferredPort.ToString() + "/serviceadmin/";
 			}
 		}
+		public bool CanProcessRequest(string firstLine)
+		{
+			return firstLine.StartsWith("GET /serviceadmin/");
+		}
+
 		public void HandleRequest(NetworkStream stream, IPEndPoint local, IPEndPoint remote)
+		{
+			HandleRequest(stream, StreamHelps.ReadLine(stream), local, remote);
+		}
+		public void HandleRequest(NetworkStream stream, string firstLine, IPEndPoint local, IPEndPoint remote)
 		{
 			if( stream == null ) throw new ArgumentNullException("stream");
 
 			StreamReader reader = new StreamReader(stream);
 			StreamWriter writer = new StreamWriter(stream);
 
-			ParseHeaders(reader);
+			ParseHeaders(firstLine, reader);
 			if( url == "/favicon.ico" ) return; // don't respond
 			WriteHeaders(writer);
 			writer.WriteLine("<html><head>");
@@ -52,7 +61,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 			writer.WriteLine("<thead><tr><th>Service Name</th><th>Status</th><th>Actions</th></tr></thead>");
 			writer.WriteLine("<tbody>");
 
-			Match task = Regex.Match(url, @"(?<verb>\w+)=(?<service>.+)");
+			Match task = Regex.Match(url, @"/serviceadmin/(?<verb>\w+)=(?<service>.+)");
 			switch( task.Groups["verb"].Value )
 			{
 				case "log":
@@ -191,10 +200,10 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		private bool cookieAssigned = false;
 		private string cookie;
 		private string url;
-		protected void ParseHeaders(TextReader reader)
+		protected void ParseHeaders(string firstLine, TextReader reader)
 		{
 			string[] headers = SplitHeaders(reader);
-			url = HttpUtility.UrlDecode(headers[0].Split(' ')[1]);
+			url = HttpUtility.UrlDecode(firstLine.Split(' ')[1]);
 			cookie = null;
 			// search for cookie
 			foreach( string header in headers )
@@ -207,11 +216,6 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		#endregion
 
 		#region IPlugin Members
-
-		public bool CanProcessRequest(string url)
-		{
-			return true;
-		}
 
 		public int[] Ports
 		{

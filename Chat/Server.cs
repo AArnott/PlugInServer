@@ -146,12 +146,6 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 
 		#region IPlugin Members
 
-		public bool CanProcessRequest(string url)
-		{
-			// TODO:  Add Server.CanProcessRequest implementation
-			return true;
-		}
-
 		public int[] Ports
 		{
 			get

@@ -16,7 +16,5 @@ namespace Byu.IT347.PluginServer.PluginServices
 
 		void Startup(IServer server);
 		void Shutdown();
-
-		bool CanProcessRequest(string url);
 	}
 }
