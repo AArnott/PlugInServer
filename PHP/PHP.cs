@@ -13,7 +13,8 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 	/// Plugin for dynamic server to handle PHP requests	
 	public class PHPplugin : MarshalByRefObject, ISharingHandler
 	{
-		
+		internal const int DefaultPort = 8080;
+
 		#region ISharingHandler Members
 
 		public void HandleRequest(NetworkStream stream, string firstLine, IPEndPoint local, IPEndPoint remote)
@@ -73,11 +74,20 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 		}
 		
 		
+		private int ActivePort
+		{
+			get
+			{
+				string sPort = System.Configuration.ConfigurationSettings.AppSettings["HttpPort"];
+				return (sPort != null) ? Convert.ToInt32(sPort) : DefaultPort;
+			}
+		}
+
 		public int[] Ports 
 		{ 
 			get
 			{
-				return new int[] {80,8080};
+				return new int[] { ActivePort };
 			}
 		}
 
