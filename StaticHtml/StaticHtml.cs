@@ -30,7 +30,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticHtml
 		{
 			get
 			{
-				return new int[] { 80 };
+				return new int[] { 80, 8080 };
 			}
 		}
 
