@@ -77,8 +77,11 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			//Extract the directory name
 			string sDirName = sRequest.Substring(sRequest.IndexOf("/"), (sRequest.LastIndexOf("/") - 3));
 			string sLocalDir = "";
-			if (sDirName =="/")
+			if (sDirName == "/")
+			{
 				sLocalDir = sMyWebServerRoot;
+				sLocalDir = GetLocalPath(sMyWebServerRoot, sDirName);
+			}
 			else
 			{
 				sLocalDir = GetLocalPath(sMyWebServerRoot, sDirName);
@@ -411,7 +414,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				Console.WriteLine("Creating Mikes " + System.Reflection.Assembly.GetExecutingAssembly().CodeBase + ".conf File");
 				Uri ownPath = new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
 				StreamWriter sw = new StreamWriter(ownPath.LocalPath + ".conf");
-				sw.WriteLine("######################\r\n#Default File Names\r\n\r\ndefault.html\r\ndefault.htm\r\nIndex.html\r\nIndex.htm;\r\n\r\n%\r\n#####################\r\n#Default File Paths\r\n#Format: <Virtual Dir>; <Local Path>\r\n\r\n/test/; C:\\myWebServerRoot\\Imtiaz\\");
+				sw.WriteLine("######################\r\n#Default File Names\r\n\r\ndefault.html\r\ndefault.htm\r\nIndex.html\r\nIndex.htm;\r\n\r\n%\r\n#####################\r\n#Default File Paths\r\n#Format: <Virtual Dir>; <Local Path>\r\n/; C:\\Inetpub\\wwwroot\\\r\n/test/; C:\\myWebServerRoot\\Imtiaz\\");
 				sw.Close();
 			}
 		}
