@@ -11,7 +11,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticHtml
 		}
 		#region IHandler Members
 
-		public void HandleRequest(NetworkStream stream)
+		public void HandleRequest(NetworkStream stream, Socket socket)
 		{
 			// TODO:  Add StaticHtmlPlugIn.HandleRequest implementation
 		}

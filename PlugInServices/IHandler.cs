@@ -6,6 +6,6 @@ namespace Byu.IT347.PluginServer.PluginServices
 {
 	public interface IHandler : IPlugin
 	{
-		void HandleRequest( NetworkStream stream );
+		void HandleRequest( NetworkStream stream, Socket socket );
 	}
 }
