@@ -21,11 +21,11 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 			StreamReader sr = new StreamReader(stream);
 			StreamWriter sw = new StreamWriter(stream);
 			string urlrequest = sr.ReadLine();
-			//Console.WriteLine("\n" + urlrequest + "\n");
+			//
 			int start = urlrequest.IndexOf("/")+1;
 			int end = urlrequest.IndexOf(" ",start);
 			string url = urlrequest.Substring(start,end-start);
-			//Console.WriteLine("\n" + url + "\n");
+			//
 			ProcessStartInfo psi = new ProcessStartInfo("C:\\php\\php-cgi.exe", "C:\\php\\" + url);
 			psi.UseShellExecute =false;
 			psi.RedirectStandardOutput = true;
