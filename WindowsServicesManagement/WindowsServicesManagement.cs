@@ -31,7 +31,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			get
 			{
-				return "http://" + SystemInformation.ComputerName + ".byu.edu:" + PreferredPort.ToString() + "/";
+				return "http://" + Dns.GetHostName() + ":" + PreferredPort.ToString() + "/";
 			}
 		}
 		public void HandleRequest(NetworkStream stream, IPEndPoint local, IPEndPoint remote)
