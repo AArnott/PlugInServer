@@ -18,7 +18,8 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 
 		public bool CanProcessRequest(string firstLine)
 		{
-			return firstLine.IndexOf(".htm") > 0;
+			//return firstLine.IndexOf(".htm") > 0;
+			return true;
 		}
 
 		public void HandleRequest(NetworkStream stream, IPEndPoint local, IPEndPoint remote)
@@ -124,13 +125,21 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				{
 					int TotalBytesToSend = 0;
 					StreamReader sreader = new StreamReader(sPhysicalFilePath);
+					pageBody = sreader.ReadToEnd();
 					
 					//pageBody = pageBody + sreader.ReadLine();
-					while(((sMyLine = sreader.ReadLine()) != null))
+					//					while(((sMyLine = sreader.ReadLine()) != null))
+					//					{
+					//						pageBody = pageBody + sMyLine;
+					//						Console.WriteLine("pageBody: " + pageBody);
+					//					}
+
+					//pageBody = pageBody + sreader.ReadLine();
+					/*while(((sMyLine = sreader.ReadLine()) != null))
 					{
 						pageBody = pageBody + sMyLine;
 						Console.WriteLine("pageBody: " + pageBody);
-					}
+					}*/
 				}
 				catch(Exception e)
 				{
@@ -171,29 +180,26 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 	
 		public void SendToBrowser(NetworkStream channel, string data)
 		{
-			StreamWriter sw = new StreamWriter(channel);
-			sw.WriteLine(data);
+			/*StreamWriter sw = new StreamWriter(channel);
+			sw.Write(data);
 			
-			sw.Flush();
-			//SendToBrowser(channel, Encoding.ASCII.GetBytes(data));
+			sw.Flush();*/
+			Console.WriteLine("Encoding: ");
+			SendToBrowser(channel, Encoding.ASCII.GetBytes(data));
 		}
-		/*public void SendToBrowser(NetworkStream channel, Byte[] bSendData)
+		public void SendToBrowser(NetworkStream channel, Byte[] bSendData)
 		{
 			int numBytes = 0;
 			try
 			{				
-				if((numBytes = channel.BeginWrite(bSendData,0,bSendData.Length,0,0) == -1))
-					Console.WriteLine("Channel Error, cannot send packet");
-				else
-				{
-					Console.WriteLine("No. of bytes send {0}", numBytes);
-				}
+				channel.Write(bSendData,0,bSendData.Length);
+					
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine("Error Occured: " + e);
+				Console.WriteLine("Error Occured while writing to browser: " + e);
 			}
-		}*/
+		}
 		public string CreateContent(IPEndPoint remote)
 		{
 			string content = "Barlow Triplets<br><img src=\"http://barlowfamily.freeservers.com/images/img_1528.jpg\"><br>" + remote.Address.ToString();
