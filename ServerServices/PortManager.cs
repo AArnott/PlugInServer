@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.IO;
 using System.Collections;
 using System.Net;
@@ -201,41 +202,58 @@ namespace Byu.IT347.PluginServer.ServerServices
 				return;
 			}
 
+			// Initialize a new thread to handle this connection
+			RequestHandler handler = new RequestHandler(this, openedSocket);
+			(new Thread(new ThreadStart(handler.HandleRequest))).Start();
+
 			// listen for a new connection right away.
 			listeningSocket.BeginAccept(new AsyncCallback(AcceptingSocket), listeningSocket);
+		}
+		protected class RequestHandler
+		{
+			protected Socket Socket;
+			protected PortManager PortManager;
 
-			// handle this request
-			try 
+			public RequestHandler(PortManager portManager, Socket socket)
 			{
-				using( NetworkStream channel = new NetworkStream(openedSocket, false) )
+				this.Socket = socket;
+				this.PortManager = portManager;
+			}
+
+			public virtual void HandleRequest()
+			{
+				try 
 				{
-					IncomingRequest(channel, (IPEndPoint)openedSocket.LocalEndPoint, (IPEndPoint)openedSocket.RemoteEndPoint);
-					// eat remaining incoming data so that the connection will close
-					while( channel.DataAvailable ) channel.ReadByte();
-					channel.Close();
+					using( NetworkStream channel = new NetworkStream(Socket, false) )
+					{
+						PortManager.IncomingRequest(channel, (IPEndPoint)Socket.LocalEndPoint, (IPEndPoint)Socket.RemoteEndPoint);
+						// eat remaining incoming data so that the connection will close
+						while( channel.DataAvailable ) channel.ReadByte();
+						channel.Close();
+					}
 				}
-			}
-			catch( SocketException ex )
-			{
-				Console.Error.WriteLine("Socket error while processing request: {0}.\n{1}", ex.ErrorCode, ex.ToString());
-				throw;
-			}
-			catch( IOException ex )
-			{
-				Console.Error.WriteLine("Error: {0}  Client probably disconnected prematurely.", ex.Message);
-			}
-			catch( Exception ex )
-			{
-				Console.Error.WriteLine("Error processing request: \n{0}", ex.ToString());
-				throw;
-			}
-			finally
-			{
-				// close socket to end connection
-				if( openedSocket.Connected ) 
+				catch( SocketException ex )
 				{
-					openedSocket.Shutdown(SocketShutdown.Both);
-					openedSocket.Close();
+					Console.Error.WriteLine("Socket error while processing request: {0}.\n{1}", ex.ErrorCode, ex.ToString());
+					throw;
+				}
+				catch( IOException ex )
+				{
+					Console.Error.WriteLine("Error: {0}  Client probably disconnected prematurely.", ex.Message);
+				}
+				catch( Exception ex )
+				{
+					Console.Error.WriteLine("Error processing request: \n{0}", ex.ToString());
+					throw;
+				}
+				finally
+				{
+					// close socket to end connection
+					if( Socket.Connected ) 
+					{
+						Socket.Shutdown(SocketShutdown.Both);
+						Socket.Close();
+					}
 				}
 			}
 		}
