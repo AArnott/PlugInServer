@@ -119,13 +119,15 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			}
 			else
 			{
-				string pageBody = "";
+				byte[] bytes = null;
 				string sMyLine = "";
 				try
 				{
-					int TotalBytesToSend = 0;
-					StreamReader sreader = new StreamReader(sPhysicalFilePath);
-					pageBody = sreader.ReadToEnd();
+					using( FileStream fs = new FileStream(sPhysicalFilePath, FileMode.Open) )
+					{
+						bytes = new byte[fs.Length];
+						fs.Read(bytes, 0, bytes.Length);
+					}
 					
 					//pageBody = pageBody + sreader.ReadLine();
 					//					while(((sMyLine = sreader.ReadLine()) != null))
@@ -145,9 +147,9 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				{
 					Console.WriteLine("Error Reading File: " + e);
 				}
-				header = CreateHeader(sHTTPVersion, mimeType, pageBody.Length, " 200 OK");
+				header = CreateHeader(sHTTPVersion, mimeType, bytes.Length, "200 OK");
 				SendToBrowser(channel, header);
-				SendToBrowser(channel, pageBody);
+				channel.Write(bytes, 0, bytes.Length);
 			}
 			
 			//Test Puposes only (Creates Static Page) Maybe use to create the 404 file not found page
@@ -232,6 +234,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			{
 				//If there is no GET method used, then the stopPosition 
 				stopPosition = request.IndexOf(" ",startPosition);
+				if( stopPosition == -1 ) stopPosition = request.Length;
 			}
 			int length = stopPosition - startPosition;
 			if (length <= 0)
