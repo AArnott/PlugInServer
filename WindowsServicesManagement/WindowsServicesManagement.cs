@@ -31,7 +31,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			get
 			{
-				return "http://" + SystemInformation.ComputerName + PreferredPort.ToString() + "/";
+				return "http://" + SystemInformation.ComputerName + ".byu.edu:" + PreferredPort.ToString() + "/";
 			}
 		}
 		public void HandleRequest(NetworkStream stream)
@@ -165,9 +165,8 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 
 		protected void WriteHeaders(TextWriter writer)
 		{
-			writer.WriteLine("HTTP/1.1 200 OK");
+			writer.WriteLine("HTTP/1.0 200 OK");
 			writer.WriteLine("Content-Type: text/html");
-			writer.WriteLine("Connection: close"); 
 			if( !cookieAssigned )
 			{
 				cookieAssigned = true;
