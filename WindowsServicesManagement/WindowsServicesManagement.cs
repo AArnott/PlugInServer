@@ -221,7 +221,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			get
 			{
-				string sPort = System.Configuration.ConfigurationSettings.AppSettings["WindowsServicesManagementPort"];
+				string sPort = System.Configuration.ConfigurationSettings.AppSettings["HttpPort"];
 				return (sPort != null) ? Convert.ToInt32(sPort) : DefaultPort;
 			}
 		}
