@@ -27,6 +27,7 @@ namespace Byu.IT347.PluginServer.ServerGui
 		private System.Windows.Forms.TextBox txtOutput;
 		private System.ComponentModel.IContainer components;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+		private System.Windows.Forms.StatusBarPanel panelStatus;
 
 		protected Services Services = new Services();
 
@@ -41,6 +42,8 @@ namespace Byu.IT347.PluginServer.ServerGui
 			TextWriter tw = new TextWriterBox(txtOutput);
 			Console.SetOut(tw);
 			Console.SetError(tw);
+
+			UpdateClues();
 		}
 
 		/// <summary>
@@ -78,6 +81,8 @@ namespace Byu.IT347.PluginServer.ServerGui
 			this.statusBar1 = new System.Windows.Forms.StatusBar();
 			this.txtOutput = new System.Windows.Forms.TextBox();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+			this.panelStatus = new System.Windows.Forms.StatusBarPanel();
+			((System.ComponentModel.ISupportInitialize)(this.panelStatus)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// toolBar1
@@ -136,6 +141,8 @@ namespace Byu.IT347.PluginServer.ServerGui
 			// 
 			this.statusBar1.Location = new System.Drawing.Point(0, 290);
 			this.statusBar1.Name = "statusBar1";
+			this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
+																						  this.panelStatus});
 			this.statusBar1.ShowPanels = true;
 			this.statusBar1.Size = new System.Drawing.Size(546, 22);
 			this.statusBar1.TabIndex = 4;
@@ -169,6 +176,7 @@ namespace Byu.IT347.PluginServer.ServerGui
 			this.Name = "frmMain";
 			this.Text = "Plug-in Server";
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.frmMain_Closing);
+			((System.ComponentModel.ISupportInitialize)(this.panelStatus)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -198,9 +206,31 @@ namespace Byu.IT347.PluginServer.ServerGui
 					Services.PluginDirectory = folderBrowserDialog1.SelectedPath;
 			}
 
+			UpdateClues();
+		}
+
+		private void UpdateClues()
+		{
 			btnStart.Pushed = Services.Status == Status.Running;
 			btnPause.Pushed = Services.Status == Status.Paused;
 			btnStop.Pushed = Services.Status == Status.Stopped;
+			
+			btnStart.Enabled = Services.Status != Status.Running;
+			btnPause.Enabled = Services.Status == Status.Running;
+			btnStop.Enabled = Services.Status != Status.Stopped;
+
+			switch( Services.Status )
+			{
+				case Status.Stopped:			
+					panelStatus.Text = "Stopped";
+					break;
+				case Status.Running:
+					panelStatus.Text = "Running";
+					break;
+				case Status.Paused:
+					panelStatus.Text = "Paused";
+					break;
+			}
 		}
 
 		private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
