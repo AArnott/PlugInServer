@@ -11,6 +11,8 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 {
 	public class StaticWebPlugIn : MarshalByRefObject, ISharingHandler
 	{
+		internal const int DefaultPort = 8080;
+
 		public StaticWebPlugIn()
 		{
 		}
@@ -373,11 +375,20 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 
 		#region IPlugin Members
 
+		private int ActivePort
+		{
+			get
+			{
+				string sPort = System.Configuration.ConfigurationSettings.AppSettings["HttpPort"];
+				return (sPort != null) ? Convert.ToInt32(sPort) : DefaultPort;
+			}
+		}
+
 		public int[] Ports
 		{
 			get
 			{
-				return new int[] { 80, 8080 };
+				return new int[] { ActivePort };
 			}
 		}
 
