@@ -17,7 +17,9 @@ namespace Byu.IT347.PluginServer.ServerConsole
 			Console.WriteLine("Plug-in Server starting.");
 			
 			Services services = new Services();
-			services.PluginDirectory = Path.Combine(Directory.GetCurrentDirectory(), PluginDirectoryName);
+			string pluginDirectory = Path.Combine(Directory.GetCurrentDirectory(), PluginDirectoryName);
+			if( !Directory.Exists(pluginDirectory) ) Directory.CreateDirectory(pluginDirectory);
+			services.PluginDirectory = pluginDirectory;
 
 			Console.WriteLine("Watching directory for changes: {0}", services.PluginDirectory);
 			

@@ -41,6 +41,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 			}
 			set
 			{
+				if( !Directory.Exists( value ) ) 
+					throw new DirectoryNotFoundException();
 				pluginAppDomains.UnloadAll();
 				PluginWatcher.Path = value;
 				pluginAppDomains.LoadAll(value);
