@@ -182,7 +182,6 @@ namespace Byu.IT347.PluginServer.ServerServices
 						// TODO: code here
 						break;
 				}
-				OnChanged();
 			}
 		}
 

@@ -40,16 +40,14 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			get
 			{
-				return (PluginAppDomain) appdomains[assemblyName];
+				return (PluginAppDomain) appdomains[assemblyName.FullName];
 			}
 		}
 		public AssemblyName FindAssemblyNameFor(string assemblyPath)
 		{
 			Uri assemblyUri = new Uri(assemblyPath);
-			string assemblyBase = assemblyUri.AbsoluteUri;
-			string filename = Path.GetFullPath(assemblyPath);
 			foreach( PluginAppDomain appdomain in appdomains.Values )
-				if( appdomain.AssemblyName.CodeBase == assemblyBase )
+				if( assemblyUri.Equals(appdomain.AssemblyName.CodeBase) )
 					return appdomain.AssemblyName;
 			return null; // could not be found
 		}
@@ -82,7 +80,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			try 
 			{
-				if( appdomains.Contains(assemblyName) ) throw new InvalidOperationException("Assembly already loaded.");
+				if( appdomains.Contains(assemblyName.FullName) ) throw new InvalidOperationException("Assembly already loaded.");
 				PluginAppDomain appdomain = new PluginAppDomain(assemblyName);
 				// Keep track of the appdomain so we can unload it if the plugin changes or is removed.
 				appdomains.Add( assemblyName.FullName, appdomain );
