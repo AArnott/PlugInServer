@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginServices", "PlugInSer
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerGui", "ServerGui\ServerGui.csproj", "{583C001E-9937-470C-81BE-160F4E26FC85}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -61,6 +65,10 @@ Global
 		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Debug.Build.0 = Debug|.NET
 		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Release.ActiveCfg = Release|.NET
 		{438EFDA2-CB1D-4F8F-A646-A96E118B835D}.Release.Build.0 = Release|.NET
+		{583C001E-9937-470C-81BE-160F4E26FC85}.Debug.ActiveCfg = Debug|.NET
+		{583C001E-9937-470C-81BE-160F4E26FC85}.Debug.Build.0 = Debug|.NET
+		{583C001E-9937-470C-81BE-160F4E26FC85}.Release.ActiveCfg = Release|.NET
+		{583C001E-9937-470C-81BE-160F4E26FC85}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
