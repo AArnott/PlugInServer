@@ -79,9 +79,9 @@ namespace Byu.IT347.PluginServer.ServerGui
 			this.btnProperties = new System.Windows.Forms.ToolBarButton();
 			this.toolbarImageList = new System.Windows.Forms.ImageList(this.components);
 			this.statusBar1 = new System.Windows.Forms.StatusBar();
+			this.panelStatus = new System.Windows.Forms.StatusBarPanel();
 			this.txtOutput = new System.Windows.Forms.TextBox();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-			this.panelStatus = new System.Windows.Forms.StatusBarPanel();
 			((System.ComponentModel.ISupportInitialize)(this.panelStatus)).BeginInit();
 			this.SuspendLayout();
 			// 
