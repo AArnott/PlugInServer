@@ -13,6 +13,7 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 	
 	public class Server : MarshalByRefObject, IHandler
 	{
+		internal const int DefaultPort = 9020;
 		public const int DefaultMaxConnections = 20;
 		public const int HistorySize = 100;
 		public const string EndOfLine = "\r\n";
@@ -145,11 +146,20 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 
 		#region IPlugin Members
 
+		private int ActivePort
+		{
+			get
+			{
+				string sPort = System.Configuration.ConfigurationSettings.AppSettings["ChatPort"];
+				return (sPort != null) ? Convert.ToInt32(sPort) : DefaultPort;
+			}
+		}
+
 		public int[] Ports
 		{
 			get
 			{
-				return new int[] { 9020 };
+				return new int[] { ActivePort };
 			}
 		}
 
