@@ -16,7 +16,6 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 		
 		#region IHandler Members
 		
-		static int counter = 0;
 		public void HandleRequest( NetworkStream stream, IPEndPoint local, IPEndPoint remote )
 		{
 			StreamReader sr = new StreamReader(stream);
@@ -38,11 +37,6 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 				sw.Write(proc.StandardOutput.ReadToEnd());
 			}
 			sw.Flush();
-			
-			//StreamWriter sw = new StreamWriter(stream);
-			//sw.WriteLine("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\nHello, {1}! {0}", 
-			//	counter++, remote.Address.ToString());
-			//sw.Flush();
 		}
 
 		#endregion
