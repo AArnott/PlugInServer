@@ -1,9 +1,11 @@
 using System;
+using System.IO;
+using System.ServiceProcess;
 using Byu.IT347.PluginServer.PluginServices;
 
 namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 {
-	public class WindowsServicesManagement : IHandler
+	public class WindowsServicesManagement : MarshalByRefObject, IHandler
 	{
 		public const string ServiceName = "Windows Services Management";
 		internal const int PreferredPort = 9910;
@@ -16,9 +18,30 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 
 		#region IHandler Members
 
-		public void HandleRequest(System.IO.Stream request, System.IO.Stream response)
+		public void HandleRequest(Stream request, Stream response)
 		{
-			// TODO:  Add WindowsServicesManagement.HandleRequest implementation
+			StreamReader reader = new StreamReader(request);
+			StreamWriter writer = new StreamWriter(response);
+
+			WriteHeaders(writer);
+			writer.WriteLine("<html><body>");
+			writer.WriteLine("<table>");
+			
+			foreach( ServiceController service in ServiceController.GetServices() )
+			{
+				writer.WriteLine("<tr><td>{0}</td><td>{1}</td></tr>", service.DisplayName, service.Status.ToString());
+			}
+			
+			writer.WriteLine("</table>");
+			writer.WriteLine("</body></html>");
+		}
+
+		protected void WriteHeaders(StreamWriter writer)
+		{
+			writer.WriteLine("HTTP/1.1 200/OK");
+			writer.WriteLine("Content-Type: text/html");
+			writer.WriteLine();
+
 		}
 
 		#endregion
@@ -27,8 +50,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 
 		public bool CanProcessRequest(string url)
 		{
-			// TODO:  Add WindowsServicesManagement.CanProcessRequest implementation
-			return false;
+			return true;
 		}
 
 		public int[] Ports
