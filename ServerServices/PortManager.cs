@@ -12,6 +12,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 	public class PortManager
 	{
 		public const int MaxConnectionQueueSize = 10;
+		protected const int PortUnavailableErrorCode = 10048;
 
 		#region Construction
 		public PortManager(Services services)
@@ -22,7 +23,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 
 		#region Attributes
 		protected readonly Services Services;
-		public int[] Ports 
+		public int[] DesiredPorts 
 		{
 			get
 			{
@@ -39,7 +40,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 				return (int[]) ports.ToArray(typeof(int));
 			}
 		}
-		public Socket[] Sockets;
+		protected Socket[] sockets;
+		public Socket[] Sockets { get { return sockets; } }
 		#endregion
 
 		#region Operations
@@ -48,7 +50,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 			if( Sockets != null ) throw new InvalidOperationException("Ports already open.");
 
 			ArrayList sockets = new ArrayList();
-			foreach( int port in Ports )
+			foreach( int port in DesiredPorts )
 			{
 				try 
 				{
@@ -59,10 +61,13 @@ namespace Byu.IT347.PluginServer.ServerServices
 				}
 				catch( SocketException e )
 				{
-					Console.Error.WriteLine(e.ToString());
+					if( e.ErrorCode == PortUnavailableErrorCode )
+						Console.Error.WriteLine("Port {0} unavailable.", port);
+					else
+						throw;
 				}
 			}
-			Sockets = (Socket[]) sockets.ToArray(typeof(Socket));
+			this.sockets = (Socket[]) sockets.ToArray(typeof(Socket));
 		}
 		public void ClosePorts()
 		{
@@ -72,7 +77,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 				socket.Shutdown(SocketShutdown.Both);
 				socket.Close();
 			}
-			Sockets = null;
+			sockets = null;
 		}
 		#endregion
 	}

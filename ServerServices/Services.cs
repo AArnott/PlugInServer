@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Collections;
 using System.Globalization;
@@ -169,7 +171,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 			{
 				PortManager.ClosePorts();
 				PortManager.OpenPorts();
-				Console.WriteLine("Now listening on ports: {0}", intarraytostring(PortManager.Ports));
+				Console.WriteLine("Now listening on ports: {0}", intarraytostring(PortManager.Sockets));
 			}
 			catch( Exception e )
 			{
@@ -177,11 +179,11 @@ namespace Byu.IT347.PluginServer.ServerServices
 				throw;
 			}
 		}
-		private string intarraytostring(int[] array)
+		private string intarraytostring(Socket[] array)
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-			foreach( int i in array )
-				sb.Append(i.ToString() + ", ");
+			foreach( Socket s in array )
+				sb.Append(((IPEndPoint)s.LocalEndPoint).Port + ", ");
 			if( sb.Length >= 2 )
 				sb.Length -= 2;
 			return sb.ToString();
