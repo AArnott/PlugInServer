@@ -147,10 +147,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 				if( !portsToKeepOpen.Contains(openPort) )
 				{
 					if( OpenSockets[openPort].Connected ) 
-					{
 						OpenSockets[openPort].Shutdown(SocketShutdown.Both);
-						OpenSockets[openPort].Close();
-					}
+					OpenSockets[openPort].Close();
 					OpenSockets.Remove(openPort);
 				}
 			}
