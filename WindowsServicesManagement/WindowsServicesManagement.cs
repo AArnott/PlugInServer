@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -41,7 +42,9 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 			StreamWriter writer = new StreamWriter(stream);
 
 			WriteHeaders(writer);
-			writer.WriteLine("<html><body>");
+			writer.WriteLine("<html><head>");
+			writer.WriteLine("<style>td { font-family: Arial; font-size: 12px; margin: 0; padding: 0; }</style>");
+			writer.WriteLine("</head><body>");
 			writer.WriteLine("<a href=\"{0}\">Refresh</a>", UrlBase);
 			writer.WriteLine("<table>");
 			writer.WriteLine("<thead><tr><th>Service Name</th><th>Status</th><th>Actions</th></tr></thead>");
@@ -59,8 +62,12 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 					break;
 			}
 
+			SortedList services = new SortedList();
 			foreach( ServiceController service in ServiceController.GetServices() )
+				services.Add(service.DisplayName, service);
+			foreach( DictionaryEntry serviceItem in services )
 			{
+				ServiceController service = (ServiceController) serviceItem.Value;
 				if( task.Success && service.ServiceName == task.Groups["service"].Value )
 				{
 					ServiceControllerStatus desiredStatus;
@@ -227,7 +234,15 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 				while( true )
 				{
 					TcpClient client = listener.AcceptTcpClient();
-					handler.HandleRequest(client.GetStream());
+					try 
+					{
+						handler.HandleRequest(client.GetStream());
+						client.GetStream().Close();
+					}
+					catch( IOException e ) 
+					{
+						Console.Error.WriteLine("Error:" + Environment.NewLine + e.ToString());
+					}
 					client.Close();
 				}
 			}
