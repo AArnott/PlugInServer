@@ -18,12 +18,13 @@ namespace Byu.IT347.PluginServer.ServerServices
 		public PortManager(Services services)
 		{
 			Services = services;
+			Services.PluginManager.Changed += new EventHandler(PluginManager_Changed);
 		}
 		#endregion
 
 		#region Attributes
 		protected readonly Services Services;
-		public int[] DesiredPorts 
+		protected int[] PortsList
 		{
 			get
 			{
@@ -39,24 +40,19 @@ namespace Byu.IT347.PluginServer.ServerServices
 				return (int[]) ports.ToArray(typeof(int));
 			}
 		}
-		protected Socket[] sockets;
-		public Socket[] Sockets { get { return sockets; } }
+
+		protected PortSocketMap OpenSockets = new PortSocketMap();
 		#endregion
 
 		#region Operations
-		public void OpenPorts()
+		protected void OpenNewSockets()
 		{
-			if( Sockets != null ) throw new InvalidOperationException("Ports already open.");
-
-			ArrayList sockets = new ArrayList();
-			foreach( int port in DesiredPorts )
+			foreach( int port in PortsList )
 			{
 				try 
 				{
-					Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-					s.Bind( new IPEndPoint(IPAddress.Any, port) );
-					s.Listen(MaxConnectionQueueSize);
-					sockets.Add(s);
+					if( OpenSockets[port] == null )
+						OpenSockets.Add( OpenListeningSocket(port) );
 				}
 				catch( SocketException e )
 				{
@@ -64,26 +60,44 @@ namespace Byu.IT347.PluginServer.ServerServices
 						Console.Error.WriteLine("Port {0} unavailable.", port);
 					else
 						throw;
+				}				
+			}
+		}
+
+		protected void CloseOldSockets()
+		{
+			ArrayList portsToKeepOpen = new ArrayList();
+			portsToKeepOpen.AddRange( PortsList );
+			foreach( int openPort in OpenSockets.AllPorts )
+			{
+				if( !portsToKeepOpen.Contains(openPort) )
+				{
+					OpenSockets[openPort].Close();
+					OpenSockets.Remove(openPort);
 				}
 			}
-			this.sockets = (Socket[]) sockets.ToArray(typeof(Socket));
-			Console.WriteLine("Now listening on ports: {0}", intarraytostring(Sockets));
 		}
-		private string intarraytostring(Socket[] array)
+
+		protected Socket OpenListeningSocket(int port)
 		{
-			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-			foreach( Socket s in array )
-				sb.Append(((IPEndPoint)s.LocalEndPoint).Port + ", ");
-			if( sb.Length >= 2 )
-				sb.Length -= 2;
-			return sb.ToString();
+			if( port < 1 || port > 65535 ) throw new ArgumentOutOfRangeException("port", port, "Valid range is 1-65535.");
+			
+			Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+			s.Bind( new IPEndPoint(IPAddress.Any, port) );
+			s.Listen(MaxConnectionQueueSize);
+			return s;
 		}
-		public void ClosePorts()
+		#endregion
+
+		#region Event handlers
+		private void PluginManager_Changed(object sender, EventArgs e)
 		{
-			if( Sockets == null ) return;
-			foreach( Socket socket in Sockets )
-				socket.Close();
-			sockets = null;
+			CloseOldSockets();
+			OpenNewSockets();
+			if( OpenSockets.Count > 0 )
+				Console.WriteLine("Sockets now open: {0}", string.Join(", ", OpenSockets.AllPortsAsStrings));
+			else
+				Console.WriteLine("Sockets all closed.");
 		}
 		#endregion
 	}

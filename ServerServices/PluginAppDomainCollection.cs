@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Collections;
 using System.Collections.Specialized;
@@ -27,20 +28,30 @@ namespace Byu.IT347.PluginServer.ServerServices
 			}
 		}
 		private HybridDictionary appdomains;
-		public bool Contains(string assemblyPath)
+		public bool Contains(AssemblyName assemblyName)
 		{
-			return appdomains.Contains(assemblyPath);
+			return appdomains.Contains(assemblyName.FullName);
 		}
-		public bool Contains(AppDomain appdomain)
+		public bool Contains(PluginAppDomain appdomain)
 		{
-			return appdomains.Contains(appdomain.FriendlyName);
+			return Contains(appdomain.AssemblyName);
 		}
-		public PluginAppDomain this[string assemblyPath]
+		public PluginAppDomain this[AssemblyName assemblyName]
 		{
 			get
 			{
-				return (PluginAppDomain) appdomains[assemblyPath];
+				return (PluginAppDomain) appdomains[assemblyName];
 			}
+		}
+		public AssemblyName FindAssemblyNameFor(string assemblyPath)
+		{
+			Uri assemblyUri = new Uri(assemblyPath);
+			string assemblyBase = assemblyUri.AbsoluteUri;
+			string filename = Path.GetFullPath(assemblyPath);
+			foreach( PluginAppDomain appdomain in appdomains.Values )
+				if( appdomain.AssemblyName.CodeBase == assemblyBase )
+					return appdomain.AssemblyName;
+			return null; // could not be found
 		}
 		#endregion
 
@@ -63,39 +74,39 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Operations
-		public PluginAppDomain Load(string assemblyFilename)
+		public PluginAppDomain Load(string assemblyPath)
+		{
+			return Load(AssemblyName.GetAssemblyName(assemblyPath));
+		}
+		public PluginAppDomain Load(AssemblyName assemblyName)
 		{
 			try 
 			{
-				if( appdomains.Contains(assemblyFilename) ) throw new InvalidOperationException("Assembly already loaded.");
-				PluginAppDomain appdomain = new PluginAppDomain(AssemblyName.GetAssemblyName(assemblyFilename));
+				if( appdomains.Contains(assemblyName) ) throw new InvalidOperationException("Assembly already loaded.");
+				PluginAppDomain appdomain = new PluginAppDomain(assemblyName);
 				// Keep track of the appdomain so we can unload it if the plugin changes or is removed.
-				appdomains.Add( assemblyFilename, appdomain );
+				appdomains.Add( assemblyName.FullName, appdomain );
 				OnAppDomainLoaded(appdomain);
 				return appdomain;
 			}
 			catch( Exception ex )
 			{
-				Console.Error.WriteLine("Error loading assembly: {0}" + Environment.NewLine + "{1}", assemblyFilename, ex.ToString());
+				Console.Error.WriteLine("Error loading assembly: {0}" + Environment.NewLine + "{1}", assemblyName.FullName, ex.ToString());
 				return null;
 			}
 		}
 		public void Unload(string assemblyPath)
 		{
-			if( !Contains( assemblyPath ) ) return;
-			PluginAppDomain appdomainToUnload = this[assemblyPath];
-			OnAppDomainUnloading(appdomainToUnload);
-			appdomains.Remove( assemblyPath );
-
-			appdomainToUnload.Unload();
+			AssemblyName assemblyName = FindAssemblyNameFor(assemblyPath);
+			if( assemblyName == null ) return;
+			Unload(this[assemblyName]);
 		}
-		public void Unload(AppDomain appdomain)
+		public void Unload(PluginAppDomain appdomain)
 		{
 			if( !Contains( appdomain ) ) return;
-			PluginAppDomain appdomainToUnload = this[appdomain.FriendlyName];
-			OnAppDomainUnloading(appdomainToUnload);
-			appdomains.Remove( appdomain.FriendlyName );
-			appdomainToUnload.Unload();
+			OnAppDomainUnloading(appdomain);
+			appdomains.Remove( appdomain.AssemblyName.FullName );
+			appdomain.Unload();
 		}
 		public void Reload(string assemblyPath)
 		{
@@ -106,8 +117,10 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			lock( appdomains )
 			{
-				foreach( AppDomain appdomain in appdomains.Values )
-					Unload(appdomain);
+				PluginAppDomain[] appdomainsArray = new PluginAppDomain[appdomains.Count];
+				appdomains.Values.CopyTo(appdomainsArray, 0);
+				for( int i = 0; i < appdomainsArray.Length; i++ )
+					Unload(appdomainsArray[i]);
 			}
 		}
 		public PluginAppDomain[] LoadAll(string assemblyDirectory)

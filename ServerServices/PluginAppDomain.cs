@@ -16,7 +16,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			if( assemblyName == null ) throw new ArgumentNullException("assemblyName");
 
-			AssemblyName = assemblyName;
+			this.assemblyName = assemblyName;
 			InitPluginsCollections();
 			InitializePluginEvidence();
 
@@ -82,7 +82,14 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#region Attributes
 		protected Evidence PluginEvidence;
 		protected AppDomain AppDomain = null;
-		protected AssemblyName AssemblyName;
+		private AssemblyName assemblyName;
+		public AssemblyName AssemblyName
+		{
+			get
+			{
+				return assemblyName;
+			}
+		}
 		protected IPlugin[] Plugins = null;
 
 		private AppDomainPluginCollection filters;

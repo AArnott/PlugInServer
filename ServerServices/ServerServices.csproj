@@ -129,6 +129,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "PortSocketMap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Services.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -25,6 +25,7 @@ namespace Byu.IT347.PluginServer.ServerConsole
 			Console.WriteLine("Watching directory for changes: {0}", services.PluginDirectory);
 			
 			Console.ReadLine();
+			services.Stop();
 		}
 	}
 }

@@ -62,7 +62,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 			}
 		}
 
-		protected PluginManager PluginManager;
+		protected internal PluginManager PluginManager;
 		protected PortManager PortManager;
 		#endregion
 
@@ -72,9 +72,6 @@ namespace Byu.IT347.PluginServer.ServerServices
 			if( status == Status.Running ) throw new InvalidOperationException("Already running.");
 			status = Status.Running;
 			PluginManager.Status = status;
-
-			// Open any ports
-			PortManager.OpenPorts();
 		}
 
 		public void Stop()
@@ -82,9 +79,6 @@ namespace Byu.IT347.PluginServer.ServerServices
 			if( status == Status.Stopped ) throw new InvalidOperationException("Already stopped.");
 			status = Status.Stopped;
 			PluginManager.Status = status;
-
-			// Close all ports
-			PortManager.ClosePorts();
 		}
 
 		public void Pause()
