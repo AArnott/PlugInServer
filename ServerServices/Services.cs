@@ -109,22 +109,25 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#region Operations
 		public void Start()
 		{
+			if( status == Status.Running ) throw new InvalidOperationException("Already running.");
 			status = Status.Running;
 
 			// Open any ports
-			// TODO: code here
+			PortManager.OpenPorts();
 		}
 
 		public void Stop()
 		{
+			if( status == Status.Stopped ) throw new InvalidOperationException("Already stopped.");
 			status = Status.Stopped;
 
 			// Close all ports
-			// TODO: code here
+			PortManager.ClosePorts();
 		}
 
 		public void Pause()
 		{
+			if( status == Status.Paused ) throw new InvalidOperationException("Already paused.");
 			status = Status.Paused;
 
 			// Stop accepting requests on ports, but leave them open
@@ -161,6 +164,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 						break;
 				}
 
+				PortManager.ClosePorts();
+				PortManager.OpenPorts();
 				Console.WriteLine("Now listening on ports: {0}", intarraytostring(PortManager.Ports));
 			}
 		}
