@@ -18,7 +18,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 
 		public bool CanProcessRequest(string firstLine)
 		{
-			if(firstLine.IndexOf(".php") > 0 || firstLine.IndexOf(".jsp") > 0 || firstLine.IndexOf(".asp") > 0)
+			if(firstLine.IndexOf(".php") > 0 || firstLine.IndexOf(".jsp") > 0 || firstLine.IndexOf(".asp") > 0 || firstLine.IndexOf("/serviceadmin/") > 0)
 
 			{	
 				return false;
@@ -41,7 +41,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 		public void HandleRequest(NetworkStream channel, string firstLine, IPEndPoint local, IPEndPoint remote)
 		{
 			string header = "";
-			string sMyWebServerRoot = "C:\\MyWebServerRoot\\";
+			string sMyWebServerRoot = System.Configuration.ConfigurationSettings.AppSettings["PublicRoot"];
 			//StreamReader sr = new StreamReader(channel);
 			string url = firstLine;
 			//Console.WriteLine(url);
@@ -411,7 +411,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				Console.WriteLine("Creating Mikes " + System.Reflection.Assembly.GetExecutingAssembly().CodeBase + ".conf File");
 				Uri ownPath = new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
 				StreamWriter sw = new StreamWriter(ownPath.LocalPath + ".conf");
-				sw.WriteLine("######################\r\n#Default File Names\r\n\r\ndefault.html\r\ndefault.htm\r\nIndex.html\r\nIndex.htm;\r\n\r\n%\r\n#####################\r\n#Default File Paths\r\n#Format: <Virtual Dir>; <Local Path>\r\n/; C:\\myWebServerRoot/\r\n/test/; C:\\myWebServerRoot\\Imtiaz\\");
+				sw.WriteLine("######################\r\n#Default File Names\r\n\r\ndefault.html\r\ndefault.htm\r\nIndex.html\r\nIndex.htm;\r\n\r\n%\r\n#####################\r\n#Default File Paths\r\n#Format: <Virtual Dir>; <Local Path>\r\n\r\n/test/; C:\\myWebServerRoot\\Imtiaz\\");
 				sw.Close();
 			}
 		}
