@@ -17,7 +17,9 @@ namespace Byu.IT347.PluginServer.Plugins.StaticHtml
 		public void HandleRequest(NetworkStream channel, IPEndPoint local, IPEndPoint remote)
 		{
 			StreamReader sr = new StreamReader(channel);
-			while( sr.ReadLine().Length > 0 );
+			string url = sr.ReadLine();
+			Console.WriteLine(url);
+			if( url.StartsWith("GET /favicon.ico ") ) return; // ignore favicon requests
 			StreamWriter sw = new StreamWriter(channel);
 			sw.WriteLine("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\nHello, {1}! {0}", 
 				counter++, remote.Address.ToString());
