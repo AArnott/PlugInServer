@@ -13,6 +13,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 	{
 		public const int MaxConnectionQueueSize = 10;
 		protected const int PortUnavailableErrorCode = 10048;
+		protected const int PortAccessDeniedErrorCode = 10013;
 
 		#region Construction
 		public PortManager(Services services)
@@ -119,10 +120,18 @@ namespace Byu.IT347.PluginServer.ServerServices
 				}
 				catch( SocketException e )
 				{
-					if( e.ErrorCode == PortUnavailableErrorCode )
-						Console.Error.WriteLine("Port {0} unavailable.", port);
-					else
+					switch( e.ErrorCode ) 
+					{
+						case PortUnavailableErrorCode:
+							Console.Error.WriteLine("Port {0} unavailable.", port);
+							break;
+						case PortAccessDeniedErrorCode:
+							Console.Error.WriteLine("Port {0} access denied.", port);
+							break;
+						default:
+							Console.Error.WriteLine("Error {0} while opening port {1}.", e.ErrorCode, port);
 						throw;
+					}
 				}				
 			}
 		}
