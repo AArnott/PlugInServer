@@ -29,6 +29,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 			catch
 			{
 				Unload();
+				throw;
 			}
 		}
 		private void InitPluginsCollections()

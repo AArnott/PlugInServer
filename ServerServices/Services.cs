@@ -15,6 +15,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			InitializePluginAppDomainsCollection();
 			InitializePluginWatcher();
+			InitializePortManager();
 		}
 		private void InitializePluginAppDomainsCollection()
 		{
@@ -37,6 +38,10 @@ namespace Byu.IT347.PluginServer.ServerServices
 			PluginWatcher.Deleted += new FileSystemEventHandler(PluginWatcher_IOEvent);
 			PluginWatcher.Changed += new FileSystemEventHandler(PluginWatcher_IOEvent);
 			PluginWatcher.EnableRaisingEvents = true;
+		}
+		private void InitializePortManager()
+		{
+			PortManager = new PortManager(this);
 		}
 		#endregion
 
@@ -87,16 +92,43 @@ namespace Byu.IT347.PluginServer.ServerServices
 			}
 		}
 
-		private PluginAppDomainCollection pluginAppDomains;
+		internal PluginAppDomainCollection pluginAppDomains;
+
+		private Status status = Status.Stopped;
+		public Status Status
+		{
+			get
+			{
+				return status;
+			}
+		}
+
+		protected PortManager PortManager;
 		#endregion
 
 		#region Operations
 		public void Start()
 		{
+			status = Status.Running;
+
+			// Open any ports
+			// TODO: code here
 		}
 
 		public void Stop()
 		{
+			status = Status.Stopped;
+
+			// Close all ports
+			// TODO: code here
+		}
+
+		public void Pause()
+		{
+			status = Status.Paused;
+
+			// Stop accepting requests on ports, but leave them open
+			// TODO: code here
 		}
 		#endregion
 
@@ -128,9 +160,18 @@ namespace Byu.IT347.PluginServer.ServerServices
 						// Rename appdomain for the plugin so it can be found when deleted later.
 						break;
 				}
+
+				Console.WriteLine("Now listening on ports: {0}", intarraytostring(PortManager.Ports));
 			}
 		}
-
+		private string intarraytostring(int[] array)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			foreach( int i in array )
+				sb.Append(i.ToString() + ", ");
+			sb.Length -= 2;
+			return sb.ToString();
+		}
 		#endregion
 
 		#region IServer Members

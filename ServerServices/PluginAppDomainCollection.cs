@@ -19,6 +19,13 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Attributes
+		public int Count
+		{
+			get
+			{
+				return appdomains.Count;
+			}
+		}
 		private HybridDictionary appdomains;
 		public bool Contains(string assemblyPath)
 		{
@@ -89,6 +96,34 @@ namespace Byu.IT347.PluginServer.ServerServices
 		}
 		#endregion
 
+		#region Enumerator
+		public PluginAppDomainCollectionEnumerator GetEnumerator()
+		{
+			return new PluginAppDomainCollectionEnumerator(this);
+		}
+		public class PluginAppDomainCollectionEnumerator
+		{
+			IDictionaryEnumerator enumerator;
+			internal PluginAppDomainCollectionEnumerator(PluginAppDomainCollection collection)
+			{
+				enumerator = collection.appdomains.GetEnumerator();
+			}
+
+			public PluginAppDomain Current
+			{
+				get
+				{
+					return (PluginAppDomain) enumerator.Value;
+				}
+			}
+
+			public bool MoveNext()
+			{
+				return enumerator.MoveNext();
+			}
+		}
+		#endregion
+
 		#region Event handlers
 		private void pluginDomain_DomainUnload(object sender, EventArgs e)
 		{
@@ -101,7 +136,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 			}
 			catch( Exception ex )
 			{
-				Console.Error.WriteLine("Error while shutting down plugin: {0}", "[TODO: assemblyName here]");
+				Console.Error.WriteLine("Error while shutting down plugin: {0}.", "[TODO: assemblyName here]");
+				Console.Error.WriteLine(ex.ToString());
 			}
 
 			// TODO: code here to make sure app domain no longer belongs to collection.
