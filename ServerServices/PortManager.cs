@@ -159,10 +159,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 			{
 				OpenSockets.Remove(socket);
 				if( socket.Connected ) 
-				{
 					socket.Shutdown(SocketShutdown.Both);
-					socket.Close();
-				}
+				socket.Close();
 			}
 			Console.WriteLine("Sockets all closed.");
 		}
