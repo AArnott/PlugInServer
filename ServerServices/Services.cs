@@ -163,10 +163,18 @@ namespace Byu.IT347.PluginServer.ServerServices
 						// Rename appdomain for the plugin so it can be found when deleted later.
 						break;
 				}
+			}
 
+			try 
+			{
 				PortManager.ClosePorts();
 				PortManager.OpenPorts();
 				Console.WriteLine("Now listening on ports: {0}", intarraytostring(PortManager.Ports));
+			}
+			catch( Exception e )
+			{
+				Console.WriteLine("Error: {0}", e.ToString());
+				throw;
 			}
 		}
 		private string intarraytostring(int[] array)
@@ -174,7 +182,8 @@ namespace Byu.IT347.PluginServer.ServerServices
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			foreach( int i in array )
 				sb.Append(i.ToString() + ", ");
-			sb.Length -= 2;
+			if( sb.Length >= 2 )
+				sb.Length -= 2;
 			return sb.ToString();
 		}
 		#endregion

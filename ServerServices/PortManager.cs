@@ -50,10 +50,17 @@ namespace Byu.IT347.PluginServer.ServerServices
 			ArrayList sockets = new ArrayList();
 			foreach( int port in Ports )
 			{
-				Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-				s.Bind( new IPEndPoint(IPAddress.Any, port) );
-				s.Listen(MaxConnectionQueueSize);
-				sockets.Add(s);
+				try 
+				{
+					Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+					s.Bind( new IPEndPoint(IPAddress.Any, port) );
+					s.Listen(MaxConnectionQueueSize);
+					sockets.Add(s);
+				}
+				catch( SocketException e )
+				{
+					Console.Error.WriteLine(e.ToString());
+				}
 			}
 			Sockets = (Socket[]) sockets.ToArray(typeof(Socket));
 		}
@@ -61,7 +68,10 @@ namespace Byu.IT347.PluginServer.ServerServices
 		{
 			if( Sockets == null ) return;
 			foreach( Socket socket in Sockets )
+			{
+				socket.Shutdown(SocketShutdown.Both);
 				socket.Close();
+			}
 			Sockets = null;
 		}
 		#endregion
