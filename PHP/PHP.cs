@@ -2,13 +2,16 @@ using System;
 using System.IO;
 using Byu.IT347.PluginServer.PluginServices;
 using System.Net;
+using System.ServiceProcess;
+using System.Windows.Forms;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace Byu.IT347.PluginServer.Plugins.PHP
 {
 	
 	/// Plugin for dynamic server to handle PHP requests	
-	public class PHPplugin : IHandler
+	public class PHPplugin : MarshalByRefObject, IHandler
 	{
 		
 		#region IHandler Members
@@ -17,15 +20,19 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 		public void HandleRequest( NetworkStream stream, IPEndPoint local, IPEndPoint remote )
 		{
 			StreamReader sr = new StreamReader(stream);
-			string url = sr.ReadLine();
-			Console.WriteLine(url);
+			string urlrequest = sr.ReadLine();
+			Console.WriteLine("\n" + urlrequest + "\n");
+			int start = urlrequest.IndexOf("/")+1;
+			int end = urlrequest.IndexOf(" ",start);
+			string url = urlrequest.Substring(start,end-start);
+			Console.WriteLine("\n" + url + "\n");
 			
-
+			Process proc = Process.Start("C:\\php\\php-cgi.exe", "C:\\php\\" + url);
 			
-			StreamWriter sw = new StreamWriter(stream);
-			sw.WriteLine("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\nHello, {1}! {0}", 
-				counter++, remote.Address.ToString());
-			sw.Flush();
+			//StreamWriter sw = new StreamWriter(stream);
+			//sw.WriteLine("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\nHello, {1}! {0}", 
+			//	counter++, remote.Address.ToString());
+			//sw.Flush();
 		}
 
 		#endregion
@@ -45,7 +52,7 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 		{ 
 			get
 			{
-				return new int[] {80};
+				return new int[] {8090};
 			}
 		}
 
