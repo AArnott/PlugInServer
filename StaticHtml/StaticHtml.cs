@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using Byu.IT347.PluginServer.PluginServices;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Byu.IT347.PluginServer.Plugins.StaticHtml
@@ -11,9 +13,15 @@ namespace Byu.IT347.PluginServer.Plugins.StaticHtml
 		}
 		#region IHandler Members
 
-		public void HandleRequest(NetworkStream stream, Socket socket)
+		static int counter = 0;
+		public void HandleRequest(NetworkStream channel, IPEndPoint local, IPEndPoint remote)
 		{
-			// TODO:  Add StaticHtmlPlugIn.HandleRequest implementation
+			StreamReader sr = new StreamReader(channel);
+			while( sr.ReadLine().Length > 0 );
+			StreamWriter sw = new StreamWriter(channel);
+			sw.WriteLine("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\nHello, {1}! {0}", 
+				counter++, remote.Address.ToString());
+			sw.Flush();
 		}
 
 		#endregion

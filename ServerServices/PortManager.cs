@@ -68,7 +68,7 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Events
-		public delegate void IncomingRequestEventHandler(NetworkStream channel, Socket socket);
+		public delegate void IncomingRequestEventHandler(NetworkStream channel, IPEndPoint local, IPEndPoint remote);
 		/// <summary>
 		/// Fired whenever a request comes in through an open socket.
 		/// </summary>
@@ -76,18 +76,38 @@ namespace Byu.IT347.PluginServer.ServerServices
 		/// <summary>
 		/// Fires the <see cref="IncomingRequest"/> event.
 		/// </summary>
-		protected void OnIncomingRequest(NetworkStream channel, Socket socket)
+		protected void OnIncomingRequest(NetworkStream channel, IPEndPoint local, IPEndPoint remote)
 		{
 			if( channel == null ) throw new ArgumentNullException("channel");
-			if( socket == null ) throw new ArgumentNullException("socket");
+			if( local == null ) throw new ArgumentNullException("local");
+			if( remote == null ) throw new ArgumentNullException("remote");
 
 			IncomingRequestEventHandler incomingRequest = IncomingRequest;
 			if( incomingRequest == null ) return; // no handlers
-			incomingRequest(channel, socket);
+			incomingRequest(channel, local, remote);
 		}
 		#endregion
 
 		#region Operations
+		public IHandler[] ListHandlersOnPort(int port)
+		{
+			ArrayList handlers = new ArrayList(Services.Count);
+			foreach( IPlugin plugin in Services )
+			{
+				if( !(plugin is IHandler) ) continue;
+				IHandler handler = (IHandler) plugin;
+				foreach( int portTest in handler.Ports )
+					if( port == portTest )
+					{
+						handlers.Add( handler );
+						break;
+					}
+			}
+			IHandler[] handlersArray = new IHandler[handlers.Count];
+			for( int i = 0; i < handlersArray.Length; i++ )
+				handlersArray[i] = (IHandler) handlers[i];
+			return handlersArray;
+		}
 		protected void OpenNewSockets()
 		{
 			foreach( int port in PortsList )
@@ -174,9 +194,14 @@ namespace Byu.IT347.PluginServer.ServerServices
 			{
 				using( NetworkStream channel = new NetworkStream(openedSocket, false) )
 				{
-					IncomingRequest(channel, openedSocket);
+					IncomingRequest(channel, (IPEndPoint)openedSocket.LocalEndPoint, (IPEndPoint)openedSocket.RemoteEndPoint);
 					channel.Close();
 				}
+			}
+			catch( Exception ex )
+			{
+				Console.Error.WriteLine("Error processing request: \n{0}", ex.ToString());
+				throw;
 			}
 			finally
 			{

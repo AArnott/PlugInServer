@@ -108,14 +108,14 @@ namespace Byu.IT347.PluginServer.ServerServices
 		#endregion
 
 		#region Event handlers
-		static int counter = 0;
-		private void PortManager_IncomingRequest(NetworkStream channel, Socket socket)
+		private void PortManager_IncomingRequest(NetworkStream channel, IPEndPoint local, IPEndPoint remote)
 		{
-			StreamReader sr = new StreamReader(channel);
-			while( sr.ReadLine().Length > 0 );
-			StreamWriter sw = new StreamWriter(channel);
-			sw.WriteLine("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\nHello, World! {0}", counter++);
-			sw.Flush();
+			// look for first handler willing to take this request
+			foreach( IHandler handler in PortManager.ListHandlersOnPort(local.Port) )
+			{
+				handler.HandleRequest(channel, local, remote);
+				break;
+			}
 		}
 		#endregion
 	}

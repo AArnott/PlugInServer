@@ -34,7 +34,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 				return "http://" + SystemInformation.ComputerName + ".byu.edu:" + PreferredPort.ToString() + "/";
 			}
 		}
-		public void HandleRequest(NetworkStream stream, Socket socket)
+		public void HandleRequest(NetworkStream stream, IPEndPoint local, IPEndPoint remote)
 		{
 			if( stream == null ) throw new ArgumentNullException("stream");
 
@@ -252,7 +252,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 					TcpClient client = listener.AcceptTcpClient();
 					try 
 					{
-						handler.HandleRequest(client.GetStream(), null);
+						handler.HandleRequest(client.GetStream(), null, null);
 						client.GetStream().Close();
 					}
 					catch( IOException e ) 
