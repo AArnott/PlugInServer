@@ -32,6 +32,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 		static int counter = 0;
 		public void HandleRequest(NetworkStream channel, string firstLine, IPEndPoint local, IPEndPoint remote)
 		{
+			string header = "";
 			string sMyWebServerRoot = "C:\\MyWebServerRoot\\";
 			//StreamReader sr = new StreamReader(channel);
 			string url = firstLine;
@@ -66,7 +67,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			string sRequestedFile = sRequest.Substring(iStartPos);
 
 			//Extract the directory name
-			string sDirName = sRequest.Substring(sRequest.IndexOf("/"), sRequest.LastIndexOf("/")-3);
+			string sDirName = sRequest.Substring(sRequest.IndexOf("/"), (sRequest.LastIndexOf("/") - 3));
 			string sLocalDir = "";
 			if (sDirName =="/")
 				sLocalDir = sMyWebServerRoot;
@@ -81,11 +82,65 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			//display the error message
 			string sErrorMessage = "";
 			string mimeType = getMimeType(url);
-			if (sLocalDir.Length ==0)
+			if (sLocalDir.Length == 0)
 			{
 				sErrorMessage = "<H2>ERROR!!! Requested Directory does not exist</H2><br>";
-				CreateHeader(sHTTPVersion, mimeType, sErrorMessage.Length, " 404 Not Found");
+				header = CreateHeader(sHTTPVersion, "", sErrorMessage.Length, " 404 Not Found");
+				SendToBrowser(channel, header);
+				SendToBrowser(channel, sErrorMessage);				
 			}
+			
+			if(sRequestedFile.Length == 0)
+			{
+				sRequestedFile = GetTheDefaultFileName(sLocalDir);
+				Console.WriteLine("RequestedFile: " + sRequestedFile);
+				if (sRequestedFile == "")
+				{
+					sErrorMessage = "<H2>Error!! No Default File Name Specified</H2>";
+					header = CreateHeader(sHTTPVersion, "", sErrorMessage.Length, " 404 Not Found");
+					SendToBrowser(channel, header);
+					SendToBrowser(channel, sErrorMessage);
+				}
+				//SendToBrowser(channel, sRequestedFile);
+			}
+			
+			mimeType = getMimeType(sRequestedFile);
+			String sPhysicalFilePath = sLocalDir + sRequestedFile;
+			Console.WriteLine("File Requested: " + sPhysicalFilePath);
+			
+			if(File.Exists(sPhysicalFilePath) == false)
+			{
+				sErrorMessage = "<H2>404 Error! File Does Not Exist...</H2>";
+				header = CreateHeader(sHTTPVersion, "", sErrorMessage.Length, " 404 Not Found");
+				SendToBrowser(channel, header);
+				SendToBrowser(channel, sErrorMessage);
+				Console.WriteLine("File Not Found");
+			}
+			else
+			{
+				string pageBody = "";
+				string sMyLine = "";
+				try
+				{
+					int TotalBytesToSend = 0;
+					StreamReader sreader = new StreamReader(sPhysicalFilePath);
+					
+					//pageBody = pageBody + sreader.ReadLine();
+					while(((sMyLine = sreader.ReadLine()) != null))
+					{
+						pageBody = pageBody + sMyLine;
+						Console.WriteLine("pageBody: " + pageBody);
+					}
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine("Error Reading File: " + e);
+				}
+				header = CreateHeader(sHTTPVersion, mimeType, pageBody.Length, " 200 OK");
+				SendToBrowser(channel, header);
+				SendToBrowser(channel, pageBody);
+			}
+			
 			//Test Puposes only (Creates Static Page) Maybe use to create the 404 file not found page
 			string content = CreateContent(remote);
 			
@@ -95,7 +150,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			
 			Byte[] byteHtmlData = Encoding.ASCII.GetBytes(content);
 			
-			int TotalBytesToSend = byteHtmlData.Length;
+			int TotBytesToSend = byteHtmlData.Length;
 			
 			
 			
@@ -112,12 +167,33 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			header = header + "Content-Length: " + TotalBytesToSend + "\r\n\r\n";
 			return header;
 		}
+
+	
 		public void SendToBrowser(NetworkStream channel, string data)
 		{
 			StreamWriter sw = new StreamWriter(channel);
 			sw.WriteLine(data);
+			
 			sw.Flush();
+			//SendToBrowser(channel, Encoding.ASCII.GetBytes(data));
 		}
+		/*public void SendToBrowser(NetworkStream channel, Byte[] bSendData)
+		{
+			int numBytes = 0;
+			try
+			{				
+				if((numBytes = channel.BeginWrite(bSendData,0,bSendData.Length,0,0) == -1))
+					Console.WriteLine("Channel Error, cannot send packet");
+				else
+				{
+					Console.WriteLine("No. of bytes send {0}", numBytes);
+				}
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine("Error Occured: " + e);
+			}
+		}*/
 		public string CreateContent(IPEndPoint remote)
 		{
 			string content = "Barlow Triplets<br><img src=\"http://barlowfamily.freeservers.com/images/img_1528.jpg\"><br>" + remote.Address.ToString();
@@ -182,24 +258,42 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 
 			try
 			{
+				Uri ownPath = new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+				sr = new StreamReader(ownPath.LocalPath + ".conf");
 				
-				sr = new StreamReader(System.Reflection.Assembly.GetExecutingAssembly().CodeBase + ".conf");
-				
-				
+				sLine = sr.ReadLine();
+				//skip to the correct configuration settings
+				while(!sLine.StartsWith("%"))
+				{
+					sLine = sr.ReadLine();
+				}
+				//ignore the commentted parts of the configuration file
+				while(sLine.StartsWith("#"))
+				{
+					sLine = sr.ReadLine();
+				}
 				while ((sLine = sr.ReadLine()) != null)
 				{
+					while(sLine.StartsWith("#"))
+					{
+						sLine = sr.ReadLine();
+					}
 					sLine.Trim();
 					
 					if (sLine.Length > 0)
 					{
 						//find the separator
 						iStartPos = sLine.IndexOf(";");
+						
+						Console.WriteLine("StartPos: " + iStartPos);
 
 						//Convert to lowercase
 						sLine = sLine.ToLower();
 
-						sVirtualDir = sLine.Substring(0,iStartPos);
+						sVirtualDir = sLine.Substring(0, iStartPos);
+						Console.WriteLine("VirtualDir: " + sVirtualDir);
 						sRealDir = sLine.Substring(iStartPos + 1);
+						Console.WriteLine("RealDir: " + sRealDir);
 
 						if (sVirtualDir == Dirname)
 						{
@@ -211,7 +305,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine("An Exception Occured: " + e.ToString());
+				Console.WriteLine("An mike Exception Occured: " + e.ToString());
 			}
 
 			if (sVirtualDir == Dirname)
@@ -228,23 +322,38 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			try
 			{
 				//Open the configuration file to find the list of default files
-				sr = new StreamReader(System.Reflection.Assembly.GetExecutingAssembly().CodeBase + ".conf");
-
+				Uri ownPath = new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+				sr = new StreamReader(ownPath.LocalPath + ".conf");
+				Console.WriteLine("LocalDirectory: " + LocalDirectory);
+				sLine = sr.ReadLine();
+				//Ignore Comments in the config file
+				while (sLine.StartsWith("#"))
+				{
+					sLine = sr.ReadLine();
+					
+				}
 				while ((sLine = sr.ReadLine()) != null)
 				{
 					//Look for the default file in the web server root folder
+					Console.WriteLine("sLine: " + sLine);
 					if (File.Exists(LocalDirectory + sLine) == true)
 						break;
 				}						
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine("An Exception Occured : " + e.ToString());
+				Console.WriteLine("An mandy Exception Occured : " + e.ToString());
 			}
 			if (File.Exists(LocalDirectory + sLine) == true)
+			{
+				Console.WriteLine("Found file: " + LocalDirectory + sLine);
 				return sLine;
+			}
 			else
+			{
+				Console.WriteLine("Did NOT find file: " + LocalDirectory + sLine);
 				return "";
+			}
 		}
 		
 		#endregion
@@ -275,8 +384,8 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 
 		public void Startup(IServer server)
 		{
-			
-			if(File.Exists(System.Reflection.Assembly.GetExecutingAssembly().CodeBase + ".conf") == true)
+			Uri thisPath = new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+			if(File.Exists(thisPath.LocalPath + ".conf") == true)
 			{
 				Console.WriteLine("Configuration File Exists...");
 			}
@@ -285,7 +394,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				Console.WriteLine("Creating Mikes " + System.Reflection.Assembly.GetExecutingAssembly().CodeBase + ".conf File");
 				Uri ownPath = new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
 				StreamWriter sw = new StreamWriter(ownPath.LocalPath + ".conf");
-				sw.WriteLine("######################\r\n#Default File Names\r\n\r\ndefault.html\r\ndefault.htm\r\nIndex.html\r\nIndex.htm;\r\n\r\n#####################\r\n#Default File Paths\r\n#Format: <Virtual Dir>; <Local Path>\r\n/; C:\\myWebServerRoot/\r\n/test/; C:\\myWebServerRoot\\Imtiaz\\");
+				sw.WriteLine("######################\r\n#Default File Names\r\n\r\ndefault.html\r\ndefault.htm\r\nIndex.html\r\nIndex.htm;\r\n\r\n%\r\n#####################\r\n#Default File Paths\r\n#Format: <Virtual Dir>; <Local Path>\r\n/; C:\\myWebServerRoot/\r\n/test/; C:\\myWebServerRoot\\Imtiaz\\");
 				sw.Close();
 			}
 		}
