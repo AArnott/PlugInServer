@@ -31,7 +31,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 		{
 			get
 			{
-				return "http://localhost:" + PreferredPort.ToString() + "/";
+				return "http://" + SystemInformation.ComputerName + ":" + PreferredPort.ToString() + "/";
 			}
 		}
 		public void HandleRequest(NetworkStream stream)
