@@ -8,7 +8,7 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 	/// <summary>
 	/// Summary description for ClientSessions.
 	/// </summary>
-	public class ClientSessions
+	public class ClientSessions : MarshalByRefObject
 	{
 		#region Construction
 		internal ClientSessions(int capacity)
@@ -44,11 +44,14 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 			client.Opened += new EventHandler(client_Opened);
 			client.Closed += new EventHandler(client_Closed);
 			client.IncomingMessage += new EventHandler(client_IncomingMessage);
+			Console.WriteLine("ClientSession added.");
 		}
-		public ClientSession Add(TcpClient client)
+		public ClientSession Add(NetworkStream clientStream)
 		{
-			ClientSession session = new ClientSession(client, HistoryDump);
+			Console.WriteLine("Adding client stream to list");
+			ClientSession session = new ClientSession(clientStream, HistoryDump);
 			Add(session);
+			session.Handler();
 			return session;
 		}
 		public void Send(string message)

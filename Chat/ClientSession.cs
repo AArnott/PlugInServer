@@ -7,21 +7,24 @@ using System.Text;
 
 namespace Byu.IT347.PluginServer.Plugins.Chat
 {
-	public class ClientSession
+	public class ClientSession : MarshalByRefObject
 	{
 		#region Construction
-		internal ClientSession(TcpClient session, string history)
+		internal ClientSession(NetworkStream stream, string history)
 		{
-			this.session = session;
-			stream = session.GetStream();
+			Console.WriteLine("Creating client session...");
+			this.stream = stream;
 			writer = new StreamWriter(stream);
 			reader = new StreamReader(stream);
 			messagesToGoOut = new Queue(maxMessageQueueSize);
 			if( history != null && history.Length > 0 ) 
 				messagesToGoOut.Enqueue(history);
 
-			thread = new Thread(new ThreadStart(Handler));
-			thread.Start();
+			Console.WriteLine("Starting Thread...");
+
+			//thread = new Thread(new ThreadStart(Handler));
+			//thread.Start();
+			//Handler();
 		}
 		#endregion
 
@@ -33,8 +36,8 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 
 		#region Attributes
 		private const int maxMessageQueueSize = 100;
-		private TcpClient session;
-		public TcpClient Session { get { return session; } }
+		//private TcpClient session;
+		//public TcpClient Session { get { return session; } }
 		private NetworkStream stream;
 		private StreamWriter writer;
 		private StreamReader reader;
@@ -67,11 +70,11 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		{
 			// Force the stream closed so that waiting client sessions 
 			// realize the connection is terminating.
-			stream.Close();
-			session.Close();
-			stream = null;
-			writer = null;
-			reader = null;
+			//stream.Close();
+			//session.Close();
+			//stream = null;
+			//writer = null;
+			//reader = null;
 			OnClosed();
 		}
 		protected virtual void OnOpened()
@@ -93,11 +96,13 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 			if( incomingMessage != null )
 				incomingMessage(this, null);
 		}
-		private void Handler()
+		internal void Handler()
 		{
 			try 
 			{
+				Console.WriteLine("Sending Welcome...");
 				SendWelcome();
+				Console.WriteLine("Getting Name...");
 				if( GetName() ) 
 					Listen();
 				close();

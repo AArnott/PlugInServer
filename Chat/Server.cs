@@ -10,28 +10,30 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 	/// <summary>
 	/// Summary description for Server.
 	/// </summary>
-	public class Server : IHandler
+	
+	public class Server : MarshalByRefObject, IHandler
 	{
-		public const int DefaultPort = 9020;
+		//public const int DefaultPort = 9020;
 		public const int DefaultMaxConnections = 20;
 		public const int HistorySize = 100;
 		public const string EndOfLine = "\r\n";
 
 		#region Construction
 		public Server() :
-			this( DefaultPort, DefaultMaxConnections )
+			this( DefaultMaxConnections )
 		{
 		}
 
-		public Server(int port, int maximumConnections)
+		public Server(int maximumConnections)
 		{
-			this.port = port;
+			//this.port = port;
 			this.maximumConnections = maximumConnections;
 			Sessions = new ClientSessions(MaximumConnections);
 			
 			Sessions.Opened += new EventHandler(Sessions_Opened);
 			Sessions.Closed += new EventHandler(Sessions_Closed);
 			Sessions.IncomingMessage += new EventHandler(Sessions_IncomingMessage);
+			Console.WriteLine("Server Started.");
 		}
 		#endregion
 
@@ -65,7 +67,7 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		#endregion
 
 		#region Operations
-		public void Start()
+/*		public void Start()
 		{
 			if( runningThread != null ) throw new InvalidOperationException("Already running!");
 			runningThread = new Thread(new ThreadStart(Run));
@@ -102,7 +104,7 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 				Sessions.CloseAll();
 				server.Stop();
 			}
-		}
+		}*/
 		public void Broadcast(string message)
 		{
 			Sessions.Send(message);
@@ -131,7 +133,13 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 
 		public void HandleRequest(NetworkStream stream, IPEndPoint local, IPEndPoint remote)
 		{
-			// TODO:  Add Server.HandleRequest implementation
+			if( Sessions.Count < MaximumConnections ) 
+			{
+				Console.WriteLine("Request received from " + remote);
+				Sessions.Add(stream);//.Closed += new EventHandler(Server_Closed);
+
+			}
+			
 		}
 
 		#endregion
@@ -141,37 +149,42 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		public bool CanProcessRequest(string url)
 		{
 			// TODO:  Add Server.CanProcessRequest implementation
-			return false;
+			return true;
 		}
 
 		public int[] Ports
 		{
 			get
 			{
-				// TODO:  Add Server.Ports getter implementation
-				return null;
+				return new int[] { 9020 };
 			}
 		}
 
 		public void Shutdown()
 		{
 			// TODO:  Add Server.Shutdown implementation
+			
 		}
 
 		public string Name
 		{
 			get
 			{
-				// TODO:  Add Server.Name getter implementation
-				return null;
+				return "ChatterBox";
 			}
 		}
 
 		public void Startup(IServer server)
 		{
-			// TODO:  Add Server.Startup implementation
+			Console.WriteLine("Starting Server...");
+			Server serv = new Server();
 		}
 
 		#endregion
+
+		private void Server_Closed(object sender, EventArgs e)
+		{
+
+		}
 	}
 }
