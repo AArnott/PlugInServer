@@ -159,7 +159,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D784C83B376247FE9D575F65AAFE0C08"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E184A79C81DA4CC49C1BAAD911AA2A6E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F2603D29D1104C368B9FF465A732B8A7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -304,7 +316,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PluginServices, Version=1.0.1921.10713, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:PluginServices, Version=1.0.1921.21399, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_76EC372A2964EFED83BB0E8475DD6ACF"
@@ -335,7 +347,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ServerServices, Version=1.0.1921.17354, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:ServerServices, Version=1.0.1921.21399, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_BCD0CEC480E9AB66A7DAC57CDA552387"
@@ -362,6 +374,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_D784C83B376247FE9D575F65AAFE0C08"
+            {
+            "SourcePath" = "8:..\\doc\\Plugin Server Documentation.chm"
+            "TargetName" = "8:Plugin Server Documentation.chm"
+            "Tag" = "8:"
+            "Folder" = "8:_130CD89371084C3AB458D99EE9BBDEA0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_E184A79C81DA4CC49C1BAAD911AA2A6E"
             {
             "SourcePath" = "8:samples\\default.htm"
@@ -371,6 +403,26 @@
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:FALSE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_F2603D29D1104C368B9FF465A732B8A7"
+            {
+            "SourcePath" = "8:..\\doc\\Plugin Server Documentation.chm"
+            "TargetName" = "8:Plugin Server Documentation.chm"
+            "Tag" = "8:"
+            "Folder" = "8:_8E9719FA8CEC46BA9ECD1FFEDE65D1C4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
             "System" = "11:FALSE"
@@ -553,7 +605,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Plugin Server"
         "ProductCode" = "8:{69CBBB6F-8B80-4114-B518-1D1B742E05E0}"
-        "PackageCode" = "8:{C64EDD49-20C4-4334-B92D-30170BA16C87}"
+        "PackageCode" = "8:{C5E0D4BD-1835-4768-8B74-A26F9319C6DC}"
         "UpgradeCode" = "8:{C7859D85-FD69-4545-A31E-94FEDCC34361}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
