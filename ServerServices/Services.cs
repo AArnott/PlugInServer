@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Collections;
 using System.Globalization;
+using System.Configuration;
 using Byu.IT347.PluginServer.PluginServices;
 using System.Timers;
 
@@ -21,6 +22,13 @@ namespace Byu.IT347.PluginServer.ServerServices
 		private void InitializePluginManager()
 		{
 			PluginManager = new PluginManager(this);
+			
+			// Set plugin directory to setting in .config file
+			string relativePath = ConfigurationSettings.AppSettings["PluginsPath"];
+			Uri basePath = new Uri(Assembly.GetExecutingAssembly().Location);
+			Uri pluginPath = new Uri(basePath, relativePath);
+			if( !Directory.Exists(pluginPath.LocalPath) ) Directory.CreateDirectory(pluginPath.LocalPath);
+			PluginDirectory = pluginPath.LocalPath;
 		}
 		private void InitializePortManager()
 		{
