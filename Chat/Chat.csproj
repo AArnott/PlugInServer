@@ -79,6 +79,11 @@
                     AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
+                <Reference
+                    Name = "PluginServices"
+                    Project = "{438EFDA2-CB1D-4F8F-A646-A96E118B835D}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

@@ -3,13 +3,14 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using Byu.IT347.PluginServer.PluginServices;
 
 namespace Byu.IT347.PluginServer.Plugins.Chat
 {
 	/// <summary>
 	/// Summary description for Server.
 	/// </summary>
-	public class Server
+	public class Server : IHandler
 	{
 		public const int DefaultPort = 9020;
 		public const int DefaultMaxConnections = 20;
@@ -124,6 +125,53 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		{
 			Console.WriteLine("{0} said: {1}", ((ClientSession)sender).Name, ((ClientSession)sender).LastMessageReceived);
 		}
+		#endregion
+
+		#region IHandler Members
+
+		public void HandleRequest(NetworkStream stream, IPEndPoint local, IPEndPoint remote)
+		{
+			// TODO:  Add Server.HandleRequest implementation
+		}
+
+		#endregion
+
+		#region IPlugin Members
+
+		public bool CanProcessRequest(string url)
+		{
+			// TODO:  Add Server.CanProcessRequest implementation
+			return false;
+		}
+
+		public int[] Ports
+		{
+			get
+			{
+				// TODO:  Add Server.Ports getter implementation
+				return null;
+			}
+		}
+
+		public void Shutdown()
+		{
+			// TODO:  Add Server.Shutdown implementation
+		}
+
+		public string Name
+		{
+			get
+			{
+				// TODO:  Add Server.Name getter implementation
+				return null;
+			}
+		}
+
+		public void Startup(IServer server)
+		{
+			// TODO:  Add Server.Startup implementation
+		}
+
 		#endregion
 	}
 }
