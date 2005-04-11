@@ -1,13 +1,13 @@
 <project SchemaVersion="1.3">
     <assemblies>
-        <assembly location=".\Chat\bin\Release\Chat.dll" documentation="" />
-        <assembly location=".\PHP\bin\Release\PHP.dll" documentation="" />
-        <assembly location=".\PlugInServices\bin\Release\PluginServices.dll" documentation="" />
-        <assembly location=".\ServerConsole\bin\Release\ServerConsole.exe" documentation="" />
-        <assembly location=".\ServerGui\bin\Release\ServerGui.exe" documentation="" />
-        <assembly location=".\ServerServices\bin\Release\ServerServices.dll" documentation="" />
-        <assembly location=".\StaticWeb\bin\Release\StaticWeb.dll" documentation="" />
-        <assembly location=".\WindowsServicesManagement\bin\Release\WindowsServicesManagement.dll" documentation="" />
+        <assembly location=".\Chat\bin\Release\Chat.dll" documentation=".\Chat\bin\Release\Chat.xml" />
+        <assembly location=".\PHP\bin\Release\PHP.dll" documentation=".\PHP\bin\Release\PHP.xml" />
+        <assembly location=".\PlugInServices\bin\Release\PluginServices.dll" documentation=".\PlugInServices\bin\Release\PluginServices.xml" />
+        <assembly location=".\ServerConsole\bin\Release\ServerConsole.exe" documentation=".\ServerConsole\bin\Release\ServerConsole.xml" />
+        <assembly location=".\ServerGui\bin\Release\ServerGui.exe" documentation=".\ServerGui\bin\Release\ServerGui.xml" />
+        <assembly location=".\ServerServices\bin\Release\ServerServices.dll" documentation=".\ServerServices\bin\Release\ServerServices.xml" />
+        <assembly location=".\StaticWeb\bin\Release\StaticWeb.dll" documentation=".\StaticWeb\bin\Release\StaticWeb.xml" />
+        <assembly location=".\WindowsServicesManagement\bin\Release\WindowsServicesManagement.dll" documentation=".\WindowsServicesManagement\bin\Release\WindowsServicesManagement.xml" />
     </assemblies>
     <documenters>
         <documenter name="JavaDoc">
@@ -28,7 +28,6 @@
             <property name="OutputDirectory" value=".\doc\" />
             <property name="HtmlHelpName" value="Plugin Server Documentation" />
             <property name="Title" value="Plugin Server Documentation" />
-            <property name="OutputTarget" value="HtmlHelp" />
         </documenter>
         <documenter name="VS.NET 2003">
             <property name="OutputDirectory" value=".\doc\" />
