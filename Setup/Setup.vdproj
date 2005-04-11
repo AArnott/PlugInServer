@@ -1161,6 +1161,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5932ED7F57AE40FDB9A5182CCF173BEF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5C76C3DAAE454E0AB258EC17273925F0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1510,12 +1516,6 @@
         "Entry"
         {
         "MsmKey" = "8:_6FEA733AADC7411E890036315031852E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_70CE144517B9417CB8DF97D789B1B84B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -5338,7 +5338,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ServerServices, Version=1.0.1927.18243, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:ServerServices, Version=1.0.1927.18611, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_28F6FE7AECB3C2BC887109DB3FC52913"
@@ -7345,6 +7345,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_5932ED7F57AE40FDB9A5182CCF173BEF"
+            {
+            "SourcePath" = "8:staticweb.dll.conf"
+            "TargetName" = "8:staticweb.dll.conf"
+            "Tag" = "8:"
+            "Folder" = "8:_BD2569D5DA1E4DC9AF193EB7087E9CCC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_5C76C3DAAE454E0AB258EC17273925F0"
             {
             "SourcePath" = "8:..\\doc\\Byu.IT347.PluginServer.ServerServices.PluginAppDomain.PluginEvidence.html"
@@ -8491,26 +8511,6 @@
             "TargetName" = "8:iso8859-10.cpg"
             "Tag" = "8:"
             "Folder" = "8:_87008E55E77043E7B292B2D847C50D82"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_70CE144517B9417CB8DF97D789B1B84B"
-            {
-            "SourcePath" = "8:..\\ServerConsole\\bin\\plugins\\staticweb.dll.conf"
-            "TargetName" = "8:staticweb.dll.conf"
-            "Tag" = "8:"
-            "Folder" = "8:_BD2569D5DA1E4DC9AF193EB7087E9CCC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -12089,7 +12089,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PluginServices, Version=1.0.1927.18243, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:PluginServices, Version=1.0.1927.18610, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_C3A60924EA9C01D428810B1A83B186AD"
@@ -15197,7 +15197,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Plugin Server"
         "ProductCode" = "8:{69CBBB6F-8B80-4114-B518-1D1B742E05E0}"
-        "PackageCode" = "8:{E45A66BC-7B6F-4581-8F0A-843028AE6A0A}"
+        "PackageCode" = "8:{BEA6D4D1-F31A-47ED-AD15-1D94CE370C84}"
         "UpgradeCode" = "8:{C7859D85-FD69-4545-A31E-94FEDCC34361}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
