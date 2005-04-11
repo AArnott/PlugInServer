@@ -17,7 +17,16 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 		{
 		}
 		#region ISharingHandler Members
-
+		/// <summary>
+		/// Tells the server what type of requests
+		/// the plugin would like to handle.
+		/// This plugin is designed to handle
+		/// all requests except php, jsp, asp
+		/// and any requests that other plugins 
+		/// already handle.
+		/// </summary>
+		/// <param name="firstLine"></param>
+		/// <returns></returns>
 		public bool CanProcessRequest(string firstLine)
 		{
 			if(firstLine.IndexOf(".php") > 0 || firstLine.IndexOf(".jsp") > 0 || firstLine.IndexOf(".asp") > 0 || firstLine.IndexOf("/serviceadmin/") > 0)
@@ -41,13 +50,15 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 
 		static int counter = 0;
 		/// <summary>
-		/// 
+		/// This method handles the request from the 
+		/// server and utilizes the other methods of the 
+		/// plugin to serve the pages to the browser 
+		/// using the SendToBrowser method
 		/// </summary>
 		/// <param name="channel"></param>
 		/// <param name="firstLine"></param>
 		/// <param name="local"></param>
 		/// <param name="remote"></param>
-		/// <remarks></remarks>
 		public void HandleRequest(NetworkStream channel, string firstLine, IPEndPoint local, IPEndPoint remote)
 		{
 			string header = "";
@@ -186,6 +197,17 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			
 			//SendContent(channel, content);
 		}
+		/// <summary>
+		/// Creates the header to be sent to the browser.  
+		/// The header is built using the http version, 
+		/// mime type, file size, and the status code (
+		/// ie: 404 file not found, 200 OK, 500 Server Error, etc)
+		/// </summary>
+		/// <param name="httpVersion"></param>
+		/// <param name="mimeType"></param>
+		/// <param name="TotalBytesToSend"></param>
+		/// <param name="StatusCode"></param>
+		/// <returns></returns>
 		public string CreateHeader(string httpVersion, string mimeType, int TotalBytesToSend, string StatusCode)
 		{
 			string header = httpVersion + " " + StatusCode + "\r\n";
@@ -194,7 +216,13 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			return header;
 		}
 
-	
+		/// <summary>
+		/// Overloaded method.  Encodes the 
+		/// string data into a byte array and 
+		/// calls the SendToBrowser method
+		/// </summary>
+		/// <param name="channel"></param>
+		/// <param name="data"></param>
 		public void SendToBrowser(NetworkStream channel, string data)
 		{
 			/*StreamWriter sw = new StreamWriter(channel);
@@ -205,6 +233,12 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			
 			SendToBrowser(channel, Encoding.ASCII.GetBytes(data));
 		}
+		/// <summary>
+		/// Method to send the byte array to the 
+		/// browser using the NetworkStream channel.
+		/// </summary>
+		/// <param name="channel"></param>
+		/// <param name="bSendData"></param>
 		public void SendToBrowser(NetworkStream channel, Byte[] bSendData)
 		{
 			try
@@ -217,17 +251,13 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				Console.WriteLine("Error Occured while writing to browser: " + e);
 			}
 		}
-		public string CreateContent(IPEndPoint remote)
-		{
-			string content = "Barlow Triplets<br><img src=\"http://barlowfamily.freeservers.com/images/img_1528.jpg\"><br>" + remote.Address.ToString();
-			return content;
-		}
-		public void SendContent(NetworkStream channel, string content)
-		{
-			StreamWriter sw = new StreamWriter(channel);
-			sw.WriteLine(content);
-			sw.Flush();
-		}
+		/// <summary>
+		/// Used to retrieve the mime type of a file using the extension of the file
+		/// All of the file extensions to be used are added to the NameValueCollection mt
+		/// and retrieved by returning the value associated with the file extension text pattern
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
 		public string getMimeType(string request)
 		{
 			NameValueCollection mt = new NameValueCollection();
@@ -263,6 +293,15 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				return mt[FileExt];
 			}
 		}
+		/// <summary>
+		/// Used to find the path of the physical directory 
+		/// associated with the virtual directory called.
+		/// The association of the virtual path and the local 
+		/// path is assigned through the configuration file. 
+		/// </summary>
+		/// <param name="WebServerRoot"></param>
+		/// <param name="Dirname"></param>
+		/// <returns></returns>
 		public string GetLocalPath(string WebServerRoot, string Dirname)
 		{
 			StreamReader sr;
@@ -338,6 +377,15 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				return "";
 			
 		}
+		/// <summary>
+		/// Looks for a default file in the LocalDirectory.  
+		/// The default file names are specified in the 
+		/// configuration file.  The default file name is 
+		/// used if a file is not specified in a request
+		/// from the browser.
+		/// </summary>
+		/// <param name="LocalDirectory"></param>
+		/// <returns></returns>
 		public string GetTheDefaultFileName(string LocalDirectory)
 		{
 			StreamReader sr;
@@ -401,12 +449,16 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				return new int[] { ActivePort };
 			}
 		}
-
+		/// <summary>
+		/// Unused in this plugin
+		/// </summary>
 		public void Shutdown()
 		{
 			// TODO:  Add StaticWebPlugIn.Shutdown implementation
 		}
-
+		/// <summary>
+		/// Returns "Static Web Server" -- the name of the plugin
+		/// </summary>
 		public string Name
 		{
 			get
@@ -414,7 +466,13 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				return "Static Web server";
 			}
 		}
-
+		/// <summary>
+		/// Method that is called when the plugin is
+		/// started.  Checks to see if the configuration
+		/// file exists.  If it does not, then a default
+		/// configuration file is created.
+		/// </summary>
+		/// <param name="server"></param>
 		public void Startup(IServer server)
 		{
 			Uri thisPath = new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
