@@ -17,6 +17,7 @@ namespace Byu.IT347.PluginServer.AutoRun
 		private System.Windows.Forms.Button btnLive;
 		private System.Windows.Forms.Button btnInstall;
 		private System.Windows.Forms.Button btnReadme;
+		private System.Windows.Forms.PictureBox pictureBox1;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -56,24 +57,26 @@ namespace Byu.IT347.PluginServer.AutoRun
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(frmMain));
 			this.btnLive = new System.Windows.Forms.Button();
 			this.btnInstall = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnReadme = new System.Windows.Forms.Button();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.SuspendLayout();
 			// 
 			// btnLive
 			// 
-			this.btnLive.Location = new System.Drawing.Point(49, 72);
+			this.btnLive.Location = new System.Drawing.Point(50, 112);
 			this.btnLive.Name = "btnLive";
 			this.btnLive.Size = new System.Drawing.Size(336, 32);
 			this.btnLive.TabIndex = 1;
-			this.btnLive.Text = "Run the Plugin Server live from the CD";
+			this.btnLive.Text = "Run the Plugin Server live from the CD (with 3 plugins)";
 			this.btnLive.Click += new System.EventHandler(this.btnLive_Click);
 			// 
 			// btnInstall
 			// 
-			this.btnInstall.Location = new System.Drawing.Point(49, 112);
+			this.btnInstall.Location = new System.Drawing.Point(50, 72);
 			this.btnInstall.Name = "btnInstall";
 			this.btnInstall.Size = new System.Drawing.Size(336, 32);
 			this.btnInstall.TabIndex = 2;
@@ -92,17 +95,28 @@ namespace Byu.IT347.PluginServer.AutoRun
 			// 
 			// btnReadme
 			// 
-			this.btnReadme.Location = new System.Drawing.Point(49, 32);
+			this.btnReadme.Location = new System.Drawing.Point(50, 32);
 			this.btnReadme.Name = "btnReadme";
 			this.btnReadme.Size = new System.Drawing.Size(336, 32);
 			this.btnReadme.TabIndex = 0;
 			this.btnReadme.Text = "Read the README";
 			this.btnReadme.Click += new System.EventHandler(this.btnReadme_Click);
 			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+			this.pictureBox1.Location = new System.Drawing.Point(16, 32);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(16, 16);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pictureBox1.TabIndex = 3;
+			this.pictureBox1.TabStop = false;
+			// 
 			// frmMain
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(434, 160);
+			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btnInstall);
 			this.Controls.Add(this.btnLive);
