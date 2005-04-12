@@ -28,6 +28,7 @@
             <property name="OutputDirectory" value=".\doc\" />
             <property name="HtmlHelpName" value="Plugin Server Documentation" />
             <property name="Title" value="Plugin Server Documentation" />
+            <property name="FeedbackEmailAddress" value="347net-l@et.byu.edu" />
         </documenter>
         <documenter name="VS.NET 2003">
             <property name="OutputDirectory" value=".\doc\" />
