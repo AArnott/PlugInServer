@@ -3345,12 +3345,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F2603D29D1104C368B9FF465A732B8A7"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_F2EBC47DEE2A4BC18367B9E82128A097"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -3472,6 +3466,12 @@
         "Entry"
         {
         "MsmKey" = "8:_FAE15FF98B254B0EBC7F8E43D587E2E7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FC32CDBF35B4429AA1614678298F76F3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -14324,26 +14324,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_F2603D29D1104C368B9FF465A732B8A7"
-            {
-            "SourcePath" = "8:..\\doc\\Plugin Server Documentation.chm"
-            "TargetName" = "8:Plugin Server Documentation.chm"
-            "Tag" = "8:"
-            "Folder" = "8:_8E9719FA8CEC46BA9ECD1FFEDE65D1C4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:FALSE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_F2EE4A6878874BA986A159AD11B42CE1"
             {
             "SourcePath" = "8:..\\doc\\Byu.IT347.PluginServer.ServerServices.PortManager.CloseOldSockets.html"
@@ -14710,6 +14690,26 @@
             "TargetName" = "8:php.ini-dist"
             "Tag" = "8:"
             "Folder" = "8:_A8EB205300224F8084CBC60D43A7F48B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_FC32CDBF35B4429AA1614678298F76F3"
+            {
+            "SourcePath" = "8:samples\\chatterbox.jar"
+            "TargetName" = "8:chatterbox.jar"
+            "Tag" = "8:"
+            "Folder" = "8:_8E9719FA8CEC46BA9ECD1FFEDE65D1C4"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -15189,7 +15189,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Plugin Server"
         "ProductCode" = "8:{69CBBB6F-8B80-4114-B518-1D1B742E05E0}"
-        "PackageCode" = "8:{B42D73CB-15E2-4C29-BE77-A36C7392CA90}"
+        "PackageCode" = "8:{A91C65DE-0BA7-44C0-B178-DCDE915BA160}"
         "UpgradeCode" = "8:{C7859D85-FD69-4545-A31E-94FEDCC34361}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
