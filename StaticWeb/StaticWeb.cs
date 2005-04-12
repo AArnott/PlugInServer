@@ -151,7 +151,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				byte[] bytes = null;
 				try
 				{
-					using( FileStream fs = new FileStream(sPhysicalFilePath, FileMode.Open) )
+					using( FileStream fs = new FileStream(sPhysicalFilePath, FileMode.Open, FileAccess.Read) )
 					{
 						bytes = new byte[fs.Length];
 						fs.Read(bytes, 0, bytes.Length);
