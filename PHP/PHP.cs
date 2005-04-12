@@ -11,7 +11,11 @@ namespace Byu.IT347.PluginServer.Plugins.PHP
 {
 	
 	/// <summary>
-	/// This plugin handels and request on the specified ports containing .php.  Plugin is dependant on PHP 5.0 installation.  Use master configuration file to change file locations.
+	/// This plugin handels and request on the specified ports containing .php.  
+	/// Plugin is dependant on PHP 5.0 installation.  
+	/// Use master configuration file to change file locations.
+	/// Date: 4/1/2005
+	/// Author: Jason B. Smith
 	/// </summary>
 	public class PHPplugin : MarshalByRefObject, ISharingHandler
 	{
