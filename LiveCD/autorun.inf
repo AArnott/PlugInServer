@@ -1,3 +1,3 @@
 [autorun]
-open=readme.html
-icon=cdrom.ico
+open=autorun.exe
+icon=live\bin\ServerGui.exe,0
