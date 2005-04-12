@@ -239,6 +239,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			mt.Add("jpg", "image/jpeg");
 			mt.Add("png", "image/png");
 			mt.Add("chm", "application/octet-stream");
+			mt.Add("jar", "application/x-compressed");
 			//Response.WriteLine("Content-type: " + mt["gif"]);
 			request = request.ToLower();
 			int startPosition = request.IndexOf(".");
