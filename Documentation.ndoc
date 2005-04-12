@@ -9,6 +9,16 @@
         <assembly location=".\StaticWeb\bin\Release\StaticWeb.dll" documentation=".\StaticWeb\bin\Release\StaticWeb.xml" />
         <assembly location=".\WindowsServicesManagement\bin\Release\WindowsServicesManagement.dll" documentation=".\WindowsServicesManagement\bin\Release\WindowsServicesManagement.xml" />
     </assemblies>
+    <namespaces>
+        <namespace name="Byu.IT347.PluginServer.Plugins.Chat">This namespace contains the Chatterbox server plugin.</namespace>
+        <namespace name="Byu.IT347.PluginServer.Plugins.PHP">This namespace contains the PHP plugin.</namespace>
+        <namespace name="Byu.IT347.PluginServer.Plugins.StaticWeb">This namespace contains the StaticWeb plugin, which servers all static web content (HTML, GIF, etc.).</namespace>
+        <namespace name="Byu.IT347.PluginServer.Plugins.WindowsServicesManagement">This namespace contains the Windows Services Management plugin.  </namespace>
+        <namespace name="Byu.IT347.PluginServer.PluginServices">This namespace contains those interfaces that must be shared between the server and the plugins.</namespace>
+        <namespace name="Byu.IT347.PluginServer.ServerConsole">This namespace contains the project that acts as a very thin text console frontend to the plugin server.</namespace>
+        <namespace name="Byu.IT347.PluginServer.ServerGui">This namespace contains the project that acts as a very thin GUI frontend to the plugin server.</namespace>
+        <namespace name="Byu.IT347.PluginServer.ServerServices">The ServerServices namespace contains all the significant Plugin Server code.  Within this namespace are classes for plugin management, port management, and request handling.</namespace>
+    </namespaces>
     <documenters>
         <documenter name="JavaDoc">
             <property name="OutputDirectory" value=".\doc\" />
@@ -28,6 +38,7 @@
             <property name="OutputDirectory" value=".\doc\" />
             <property name="HtmlHelpName" value="Plugin Server Documentation" />
             <property name="Title" value="Plugin Server Documentation" />
+            <property name="CopyrightText" value="Copyright 2005" />
             <property name="FeedbackEmailAddress" value="347net-l@et.byu.edu" />
         </documenter>
         <documenter name="VS.NET 2003">
