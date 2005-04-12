@@ -67,11 +67,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 			string url = firstLine;
 			//Console.WriteLine(url);
 			if( url.StartsWith("GET /favicon.ico ") ) return; // ignore favicon requests
-			//StreamWriter sw = new StreamWriter(channel);
-			//sw.WriteLine("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\nHello Mike's World, {1}! {0} {2} {3}", 
-			//	counter++, remote.Address.ToString(), "<img src=\"http://barlowfamily.freeservers.com/images/img_1528.jpg\">", url);
-			//sw.Flush();
-
+			
 			//Look for HTTP request
 			int iStartPos = url.IndexOf("HTTP",1);
 			//Get the HTTP Text and Version will return "HTTP/1.x"
@@ -159,21 +155,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 					{
 						bytes = new byte[fs.Length];
 						fs.Read(bytes, 0, bytes.Length);
-					}
-					
-					//pageBody = pageBody + sreader.ReadLine();
-					//					while(((sMyLine = sreader.ReadLine()) != null))
-					//					{
-					//						pageBody = pageBody + sMyLine;
-					//						Console.WriteLine("pageBody: " + pageBody);
-					//					}
-
-					//pageBody = pageBody + sreader.ReadLine();
-					/*while(((sMyLine = sreader.ReadLine()) != null))
-					{
-						pageBody = pageBody + sMyLine;
-						Console.WriteLine("pageBody: " + pageBody);
-					}*/
+					}				
 				}
 				catch(Exception e)
 				{
@@ -184,18 +166,7 @@ namespace Byu.IT347.PluginServer.Plugins.StaticWeb
 				channel.Write(bytes, 0, bytes.Length);
 			}
 			
-			//Test Puposes only (Creates Static Page) Maybe use to create the 404 file not found page
-			//string content = CreateContent(remote);
 			
-			//Byte[] byteHtmlData = Encoding.ASCII.GetBytes(htmlPage);
-			//string sMimeType = "";
-			//int iTotBytes = byteHtmlData.Length;
-			
-			//string header = CreateHeader(mimeType, TotalBytesToSend);
-			//SendToBrowser(channel, header);
-			//SendToBrowser(channel, content);
-			
-			//SendContent(channel, content);
 		}
 		/// <summary>
 		/// Creates the header to be sent to the browser.  
