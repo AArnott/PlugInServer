@@ -18,6 +18,7 @@ namespace Byu.IT347.PluginServer.AutoRun
 		private System.Windows.Forms.Button btnInstall;
 		private System.Windows.Forms.Button btnReadme;
 		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.Button btnChatClient;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -63,6 +64,7 @@ namespace Byu.IT347.PluginServer.AutoRun
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnReadme = new System.Windows.Forms.Button();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.btnChatClient = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnLive
@@ -70,7 +72,7 @@ namespace Byu.IT347.PluginServer.AutoRun
 			this.btnLive.Location = new System.Drawing.Point(50, 112);
 			this.btnLive.Name = "btnLive";
 			this.btnLive.Size = new System.Drawing.Size(336, 32);
-			this.btnLive.TabIndex = 1;
+			this.btnLive.TabIndex = 2;
 			this.btnLive.Text = "Run the Plugin Server live from the CD (with 3 plugins)";
 			this.btnLive.Click += new System.EventHandler(this.btnLive_Click);
 			// 
@@ -79,7 +81,7 @@ namespace Byu.IT347.PluginServer.AutoRun
 			this.btnInstall.Location = new System.Drawing.Point(50, 72);
 			this.btnInstall.Name = "btnInstall";
 			this.btnInstall.Size = new System.Drawing.Size(336, 32);
-			this.btnInstall.TabIndex = 2;
+			this.btnInstall.TabIndex = 1;
 			this.btnInstall.Text = "Install the Plugin Server + 4 plugins";
 			this.btnInstall.Click += new System.EventHandler(this.btnInstall_Click);
 			// 
@@ -95,7 +97,7 @@ namespace Byu.IT347.PluginServer.AutoRun
 			// 
 			// btnReadme
 			// 
-			this.btnReadme.Location = new System.Drawing.Point(50, 32);
+			this.btnReadme.Location = new System.Drawing.Point(50, 24);
 			this.btnReadme.Name = "btnReadme";
 			this.btnReadme.Size = new System.Drawing.Size(336, 32);
 			this.btnReadme.TabIndex = 0;
@@ -112,10 +114,20 @@ namespace Byu.IT347.PluginServer.AutoRun
 			this.pictureBox1.TabIndex = 3;
 			this.pictureBox1.TabStop = false;
 			// 
+			// btnChatClient
+			// 
+			this.btnChatClient.Location = new System.Drawing.Point(49, 152);
+			this.btnChatClient.Name = "btnChatClient";
+			this.btnChatClient.Size = new System.Drawing.Size(336, 32);
+			this.btnChatClient.TabIndex = 3;
+			this.btnChatClient.Text = "Start Chatterbox Java Client";
+			this.btnChatClient.Click += new System.EventHandler(this.btnChatClient_Click);
+			// 
 			// frmMain
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(434, 160);
+			this.ClientSize = new System.Drawing.Size(434, 192);
+			this.Controls.Add(this.btnChatClient);
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btnInstall);
@@ -125,6 +137,7 @@ namespace Byu.IT347.PluginServer.AutoRun
 			this.MaximizeBox = false;
 			this.Name = "frmMain";
 			this.Text = "Plugin Server LiveCD + Install";
+			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -153,6 +166,16 @@ namespace Byu.IT347.PluginServer.AutoRun
 		private void btnInstall_Click(object sender, System.EventArgs e)
 		{
 			Process.Start("setup.exe");
+		}
+
+		private void btnChatClient_Click(object sender, System.EventArgs e)
+		{
+			Process.Start("java.exe", "-jar live\\bin\\chatterbox.jar");
+		}
+
+		private void frmMain_Load(object sender, System.EventArgs e)
+		{
+		
 		}
 	}
 }
