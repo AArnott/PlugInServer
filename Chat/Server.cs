@@ -8,13 +8,24 @@ using Byu.IT347.PluginServer.PluginServices;
 namespace Byu.IT347.PluginServer.Plugins.Chat
 {
 	/// <summary>
-	/// Summary description for Server.
+	/// Server manages the requests from the Plugin Server and manages 
+	/// clients and inter-client communication.
 	/// </summary>
 	
 	public class Server : MarshalByRefObject, IHandler
 	{
+		/// <summary>
+		/// The default port that chat clients will connect to.
+		/// </summary>
 		internal const int DefaultPort = 9020;
+		/// <summary>
+		/// Maximum number of allowable connections.
+		/// </summary>
 		public const int DefaultMaxConnections = 20;
+		/// <summary>
+		/// number of lines of conversation history that will be sent 
+		/// to clients when they first connect.
+		/// </summary>
 		public const int HistorySize = 100;
 		public const string EndOfLine = "\r\n";
 
@@ -23,7 +34,10 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 			this( DefaultMaxConnections )
 		{
 		}
-
+		/// <summary>
+		/// Initializes the variables and objects required to keep track of clients.
+		/// </summary>
+		/// <param name="maximumConnections"></param>
 		public Server(int maximumConnections)
 		{
 			//this.port = port;
@@ -67,44 +81,10 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		#endregion
 
 		#region Operations
-/*		public void Start()
-		{
-			if( runningThread != null ) throw new InvalidOperationException("Already running!");
-			runningThread = new Thread(new ThreadStart(Run));
-			runningThread.Start();
-		}
-		public void Stop()
-		{
-			runningThread.Abort();
-			runningThread = null;
-		}
-		private void Run()
-		{
-			TcpListener server = new TcpListener(IPAddress.Any, Port);
-
-			// Start() will bind to the port and start queuing 
-			// connection requests.
-			server.Start();
-			Console.WriteLine("Now waiting for connections...");
-
-			try 
-			{
-				while( true )
-					if( server.Pending() && Sessions.Count < MaximumConnections ) 
-						Sessions.Add(server.AcceptTcpClient());
-					else
-						Thread.Sleep(100); // don't drown the CPU
-			}
-			catch( ThreadAbortException )
-			{
-				// just quietly quit.
-			}
-			finally
-			{
-				Sessions.CloseAll();
-				server.Stop();
-			}
-		}*/
+		/// <summary>
+		/// Broadcasts the message to all clients that are currently connected.
+		/// </summary>
+		/// <param name="message"></param>
 		public void Broadcast(string message)
 		{
 			Sessions.Send(message);
@@ -165,8 +145,7 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 
 		public void Shutdown()
 		{
-			// TODO:  Add Server.Shutdown implementation
-			
+			// Shut down
 		}
 
 		public string Name

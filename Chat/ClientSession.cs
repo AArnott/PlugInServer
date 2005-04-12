@@ -10,6 +10,11 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 	public class ClientSession : MarshalByRefObject
 	{
 		#region Construction
+		/// <summary>
+		/// Creates a Client Session that contains the incoming and outgoing streams.
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <param name="history"></param>
 		internal ClientSession(NetworkStream stream, string history)
 		{
 			Console.WriteLine("Creating client session...");
@@ -19,12 +24,6 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 			messagesToGoOut = new Queue(maxMessageQueueSize);
 			if( history != null && history.Length > 0 ) 
 				messagesToGoOut.Enqueue(history);
-
-			Console.WriteLine("Starting Thread...");
-
-			//thread = new Thread(new ThreadStart(Handler));
-			//thread.Start();
-			//Handler();
 		}
 		#endregion
 
@@ -36,12 +35,9 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 
 		#region Attributes
 		private const int maxMessageQueueSize = 100;
-		//private TcpClient session;
-		//public TcpClient Session { get { return session; } }
 		private NetworkStream stream;
 		private StreamWriter writer;
 		private StreamReader reader;
-		private Thread thread;
 		private Queue messagesToGoOut;
 
 		private string name;
@@ -57,6 +53,10 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		#endregion
 
 		#region Operations
+		/// <summary>
+		/// Puts the message into the queue waiting till it can be sent to the client.
+		/// </summary>
+		/// <param name="message"></param>
 		public void Send(string message)
 		{
 			messagesToGoOut.Enqueue(message);
@@ -64,17 +64,10 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		public void Close()
 		{
 			// Wait until the client receives all incoming text
-			thread.Abort();
+			//thread.Abort();
 		}
 		private void close()
 		{
-			// Force the stream closed so that waiting client sessions 
-			// realize the connection is terminating.
-			//stream.Close();
-			//session.Close();
-			//stream = null;
-			//writer = null;
-			//reader = null;
 			OnClosed();
 		}
 		protected virtual void OnOpened()
@@ -90,12 +83,19 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 				closed(this, null);
 		}
 
+		/// <summary>
+		/// Triggers an event when a message has come in from the client.
+		/// </summary>
 		protected virtual void OnIncomingMessage()
 		{
 			EventHandler incomingMessage = IncomingMessage;
 			if( incomingMessage != null )
 				incomingMessage(this, null);
 		}
+		/// <summary>
+		/// Handles the communication with the client.
+		/// This is where the main processing for each client takes place.
+		/// </summary>
 		internal void Handler()
 		{
 			try 
@@ -116,10 +116,17 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 				close();
 			}
 		}
+		/// <summary>
+		/// Sends a greeting to the new client
+		/// </summary>
 		private void SendWelcome()
 		{
 			writer.Write("Welcome to the chat server." + Server.EndOfLine);
 		}
+		/// <summary>
+		/// Gets the name for the newly connected user.
+		/// </summary>
+		/// <returns></returns>
 		private bool GetName()
 		{
 			writer.WriteLine("Enter your name:");
@@ -135,6 +142,9 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 			OnOpened();
 			return true;
 		}
+		/// <summary>
+		/// Contains the main operating loop for the individual client communication.
+		/// </summary>
 		private void Listen()
 		{
 			try 
@@ -153,12 +163,18 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 					}
 					
 				}
+
 			}
 			catch( IOException )
 			{
 				// just drop the connection
 			}
 		}
+		/// <summary>
+		/// gets all the ready messages and sends them to the client.  (typically should only
+		/// be the single most recent message)
+		/// </summary>
+		/// <returns></returns>
 		private string DequeueAllMessages()
 		{
 			// Wait until we have at least one message (for our synchronous clients)

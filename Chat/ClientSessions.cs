@@ -6,11 +6,16 @@ using System.Net.Sockets;
 namespace Byu.IT347.PluginServer.Plugins.Chat
 {
 	/// <summary>
-	/// Summary description for ClientSessions.
+	/// Serves as a holding point for all of the client objects.  
+	/// Also provides functionality for communicating with the clients.
 	/// </summary>
 	public class ClientSessions : MarshalByRefObject
 	{
 		#region Construction
+		/// <summary>
+		/// Instantiates the Collections for the history and list of clients.
+		/// </summary>
+		/// <param name="capacity"></param>
 		internal ClientSessions(int capacity)
 		{
 			sessions = new ArrayList(capacity);
@@ -37,6 +42,10 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		#endregion
 
 		#region Operations
+		/// <summary>
+		/// Adds the client to the collection of connected clients.
+		/// </summary>
+		/// <param name="client"></param>
 		public void Add(ClientSession client)
 		{
 			if( client == null ) throw new ArgumentNullException("client");
@@ -46,6 +55,11 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 			client.IncomingMessage += new EventHandler(client_IncomingMessage);
 			Console.WriteLine("ClientSession added.");
 		}
+		/// <summary>
+		/// Takes a Network Stream from Server and makes it into a ClientSession object for storage.
+		/// </summary>
+		/// <param name="clientStream"></param>
+		/// <returns></returns>
 		public ClientSession Add(NetworkStream clientStream)
 		{
 			Console.WriteLine("Adding client stream to list");
@@ -54,6 +68,10 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 			session.Handler();
 			return session;
 		}
+		/// <summary>
+		/// Sends the message out to all connected clients and adds the message to the history.
+		/// </summary>
+		/// <param name="message"></param>
 		public void Send(string message)
 		{
 			MessageHistory.Enqueue(message);
@@ -62,6 +80,9 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 				foreach( ClientSession client in sessions )
 					client.Send(message);
 		}
+		/// <summary>
+		/// Disconnects all clients.
+		/// </summary>
 		public void CloseAll()
 		{
 			lock( sessions )
@@ -105,6 +126,10 @@ namespace Byu.IT347.PluginServer.Plugins.Chat
 		}
 		#endregion
 
+		/// <summary>
+		/// Compiles all of the messages in the history in preparation 
+		/// for sending to new clients.
+		/// </summary>
 		private string HistoryDump 
 		{
 			get
