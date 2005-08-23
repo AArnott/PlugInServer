@@ -108,7 +108,7 @@ namespace Byu.IT347.PluginServer.Plugins.WindowsServicesManagement
 						service.WaitForStatus(desiredStatus, TimeSpan.FromSeconds(3));
 						writer.WriteLine("<tr style=\"background-color: cyan\">");
 					}
-					catch( TimeoutException )
+					catch( System.ServiceProcess.TimeoutException )
 					{
 						writer.WriteLine("<tr style=\"background-color: yellow\">");
 					}
