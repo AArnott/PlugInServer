@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Byu.IT347.PluginServer.ServerGui
 {
@@ -23,7 +24,13 @@ namespace Byu.IT347.PluginServer.ServerGui
 
 		public override void Write(string value)
 		{
-			textBox.AppendText(value);
+			if (textBox.InvokeRequired) {
+				textBox.BeginInvoke(new ThreadStart(delegate() {
+					Write(value);
+				}));
+			} else {
+				textBox.AppendText(value);
+			}
 		}
 
 		public override System.Text.Encoding Encoding
